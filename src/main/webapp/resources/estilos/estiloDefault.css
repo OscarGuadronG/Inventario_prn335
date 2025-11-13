@@ -1,0 +1,174 @@
+/* Contenedor principal */
+.container {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+/* Paneles y formularios */
+.panel {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+}
+
+/* Títulos */
+.panel h2, h1 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Etiquetas y campos del formulario */
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"], input[type="number"], select, textarea {
+    width: 100%;
+    padding: 6px 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Botones */
+button, .ui-button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007ad9;
+    color: white;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+button:hover, .ui-button:hover {
+    background-color: #005fa3;
+}
+
+/* Tabla */
+.ui-datatable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ui-datatable th, .ui-datatable td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+.ui-datatable th {
+    background-color: #f2f2f2;
+    text-align: left;
+}
+
+/* Mensajes */
+.ui-messages {
+    margin-bottom: 15px;
+}
+
+.etiqueta {
+    font-weight: bold;
+    text-align: right;
+    padding-right: 10px;
+}
+
+.campo {
+    width: 100%;
+}
+
+.formulario-grid td {
+    padding: 5px;
+}
+
+.campo-checkbox
+.campo-input,
+.campo-textarea {
+    width: 100%;
+}
+
+.formulario-grid {
+    width: 100%;
+    border-spacing: 10px;
+}
+
+.formulario-grid .etiqueta {
+    text-align: right;
+    font-weight: bold;
+    vertical-align: middle;
+    width: 30%;
+}
+
+.formulario-grid .campo {
+    text-align: left;
+    width: 70%;
+}
+
+.panel-botones {
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+}
+
+.panel-botones .ui-button {
+    margin: 0 5px;
+}
+/*Sidebar*/
+body {
+    display: flex;
+    min-height: 100vh;
+    margin: 0;
+}
+
+aside.sidebar {
+    width: 250px;
+    background-color: #2f4050;
+    color: white;
+    padding: 1rem;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+}
+
+main {
+    flex-grow: 1;
+    padding: 2rem;
+    background-color: #f5f5f5;
+}
+
+header, footer {
+    text-align: center;
+    background-color: #1a1a1a;
+    color: white;
+    padding: 0.5rem;
+}
+.titulo-formulario {
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+.etiqueta.required {
+    position: relative;
+}
+
+.etiqueta.required::after {
+    content: " *";
+    color: red;
+    font-weight: bold;
+    position: absolute;
+    right: -10px;
+    top: 0;
+}
+
+.language-selector {
+    display: inline-block;
+    margin-left: 1rem;
+}
+
+.idioma-dropdown {
+    min-width: 140px;
+    font-size: 0.85rem;
+}

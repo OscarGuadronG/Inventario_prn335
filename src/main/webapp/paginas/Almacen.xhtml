@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="componentes/Template.xhtml">
+    <ui:define name="tituloFormulario">
+        #{msg['sb.Almacenes']}
+    </ui:define>
+    <ui:define name="PanelTabla">
+        <p:outputPanel id="panelTabla" rendered="#{almacenFrm.estadoCrud eq 'Nada'}">
+            <h:panelGroup id="tblBotones">
+                <ui:include src="componentes/Botones-Top.xhtml">
+                    <ui:param name="boton" value="nuevo"/>
+                    <ui:param name="bean" value="#{almacenFrm}"/>
+                </ui:include>
+            </h:panelGroup>
+            <br/>
+            <!-- Tabla Almacén-->
+            <p:dataTable id="tblDato" value="#{almacenFrm.modelo}" var="al" lazy="true"
+                         paginator="true" rows="10" selection="#{almacenFrm.registro}"
+                         selectionMode="single" rowKey="#{al.id}" selectionListener="#{almacenFrm.selectionHandler}"
+                         styleClass="ui-datatable">
+                <!-- El unico ajax-->
+                <p:ajax event="rowSelect" update=":frmTabla :frmFormulario mensajes"
+                        listener="#{almacenFrm.selectionHandler}"/>
+                <!-- Definición de columnas -->
+                <p:column headerText="#{msg['lbl.id']}">
+                    <h:outputText value="#{al.id}"/>
+                </p:column>
+                <p:column headerText="#{msg['sb.TipoAlmacen']}">
+                    <h:outputText value="#{al.idTipoAlmacen.nombre}"/>
+                </p:column>
+                <p:column headerText="#{msg['lbl.estado']}">
+                    <h:outputText value="#{al.activo?msg['lbl.activo']:msg['lbl.inactivo']}"/>
+                </p:column>
+                <p:column headerText="#{msg['lbl.descripcion']}">
+                    <h:outputText value="#{al.observaciones}"/>
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+    </ui:define>
+    <ui:define name="PanelEdicion">
+        <p:outputPanel id="panelEdicion" rendered="#{almacenFrm.estadoCrud ne 'Nada'}">
+            <p:panel header="#{msg['lbl.formulario']} #{msg['sb.Almacenes']}" styleClass="panel">
+                <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
+                    <!-- Campos del formulario -->
+                    <h:outputLabel value=" "/>
+                    <h:outputLabel for="idTipoAlmacen" value="#{msg['sb.TipoAlmacen']}" styleClass="etiqueta required"/>
+                    <p:autoComplete id="idTipoAlmacen" value="#{almacenFrm.registro.idTipoAlmacen}" required="true"
+                                    completeMethod="#{almacenFrm.completarTipoAlmacen}" var="tipo"
+                                    itemLabel="#{tipo.nombre}" itemValue="#{tipo}"
+                                    converter="tipoAlmacenConverter" dropdown="true"
+                                    forceSelection="true" placeholder="Seleccione un tipo de almacén"
+                                    requiredMessage="#{msg['msg.tipoAlmacen']}"/>
+                    <h:outputLabel for="activo" value="#{msg['lbl.estado']}:"/>
+                    <p:selectBooleanCheckbox id="activo" value="#{almacenFrm.registro.activo}"
+                                             styleClass="campo-checkbox"/>
+                    <h:outputLabel for="observaciones" value="#{msg['lbl.descripcion']}:"/>
+                    <p:inputTextarea id="observaciones" value="#{almacenFrm.registro.observaciones}"
+                                     styleClass="campo-textarea" rows="3"/>
+                </p:panelGrid>
+                <br/>
+                <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">
+                    <ui:include src="componentes/Botones-Top.xhtml">
+                        <ui:param name="boton" value="ediciones"/>
+                        <ui:param name="bean" value="#{almacenFrm}"/>
+                    </ui:include>
+                </h:panelGroup>
+            </p:panel>
+        </p:outputPanel>
+    </ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title><ui:insert name="title">InventarioWeb</ui:insert></title>
+    <h:outputStylesheet name="estilos/estiloDefault.css"/>
+</h:head>
+<f:view locale="#{idiomaBean.locale}"/>
+<h:body>
+
+    <aside class="sidebar">
+        <ui:include src="/paginas/componentes/Sidebar.xhtml"/>
+    </aside>
+
+    <main>
+        <h1 class="titulo-formulario">
+            <ui:insert name="tituloFormulario">Formulario por defecto</ui:insert>
+        </h1>
+        <p:growl id="mensajes" showDetail="true" life="4000"/>
+        <ui:insert name="content">
+            <h:form id="frmTabla">
+                <ui:insert name="PanelTabla"/>
+                <!-- Contrato: el ui:define debe tener un outputPanel id=panelTabla -->
+            </h:form>
+            <h:form id="frmFormulario">
+                <ui:insert name="PanelEdicion"/>
+                <!-- Contrato: el ui:define debe tener un outputPanel id=panelEdicion -->
+            </h:form>
+        </ui:insert>
+    </main>
+
+    <!-- Footer opcional -->
+    <footer>
+        <ui:insert name="footer">
+            <p>©UES 2025, InventarioWebApp</p>
+            <h:form class="language-selector">
+                <p:selectOneMenu value="#{idiomaBean.idioma}" styleClass="idioma-dropdown">
+                    <f:selectItem itemLabel="#{msg['tmp.Espaniol']}" itemValue="es"/>
+                    <f:selectItem itemLabel="#{msg['tmp.Ingles']}" itemValue="en"/>
+                    <f:selectItem itemLabel="#{msg['tmp.Frances']}" itemValue="fr"/>
+                    <f:selectItem itemLabel="#{msg['tmp.Aleman']}" itemValue="de"/>
+                    <p:ajax listener="#{idiomaBean.cambiarIdioma}" process="@this" update="@all"/>
+                </p:selectOneMenu>
+            </h:form>
+        </ui:insert>
+    </footer>
+</h:body>
+
+</html>

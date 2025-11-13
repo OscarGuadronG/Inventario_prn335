@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<ui:composition template="componentes/Template.xhtml">
+    <ui:define name="tituloFormulario">
+        #{msg['sb.Clientes']}
+    </ui:define>
+
+    <ui:define name="PanelTabla">
+        <p:outputPanel id="panelTabla" rendered="#{clienteFrm.estadoCrud eq 'Nada'}">
+            <h:panelGroup id="tblBotones">
+                <ui:include src="componentes/Botones-Top.xhtml">
+                    <ui:param name="boton" value="nuevo"/>
+                    <ui:param name="bean" value="#{clienteFrm}"/>
+                </ui:include>
+            </h:panelGroup>
+            <br/>
+            <!-- Tabla Tipo Almacen-->
+            <p:dataTable id="tblDato" value="#{clienteFrm.modelo}" var="cli" lazy="true"
+                         paginator="true" rows="10" selection="#{clienteFrm.registro}"
+                         selectionMode="single" rowKey="#{cli.id}" selectionListener="#{clienteFrm.selectionHandler}"
+                         styleClass="ui-datatable">
+                <!-- El unico ajax-->
+                <p:ajax event="rowSelect" update=":frmTabla :frmFormulario mensajes"
+                        listener="#{clienteFrm.selectionHandler}"/>
+                <!-- Definición de columnas -->
+                <p:column headerText="#{msg['lbl.id']}">
+                    <h:outputText value="#{cli.id}"/>
+                </p:column>
+                <p:column headerText="#{msg['lbl.nombre']}">
+                    <h:outputText value="#{cli.nombre}"/>
+                </p:column>
+                <p:column headerText="#{msg['lbl.dui']}">
+                    <h:outputText value="#{cli.dui}"/>
+                </p:column>
+                <p:column headerText="#{msg['lbl.nit']}">
+                    <h:outputText value="#{cli.nit}"/>
+                </p:column>
+                <p:column headerText="#{msg['lbl.estado']}">
+                    <h:outputText value="#{cli.activo?msg['lbl.activo']:msg['lbl.inactivo']}"/>
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+    </ui:define>
+    <ui:define name="PanelEdicion">
+        <p:outputPanel id="panelEdicion" rendered="#{clienteFrm.estadoCrud ne 'Nada'}">
+            <p:panel header="#{msg['lbl.formulario']} #{msg['sb.Clientes']}" styleClass="panel">
+                <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
+
+                    <!-- Campos del formulario -->
+                    <h:outputLabel value=" "/>
+                    <h:outputLabel for="nombre" value="#{msg['lbl.nombre']}:" styleClass="etiqueta required"/>
+                    <p:inputText id="nombre" value="#{clienteFrm.registro.nombre}" required="true"
+                                 requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input"/>
+                    <h:outputLabel for="dui" value="#{msg['lbl.dui']}:" styleClass="etiqueta required"/>
+                    <p:inputText id="dui" value="#{clienteFrm.registro.dui}" required="true" maxlength="9"
+                                 requiredMessage="#{msg['msg.dui']}" styleClass="campo-input" placeholder="000000000"/>
+                    <h:outputLabel for="nit" value="#{msg['lbl.nit']}:" styleClass="etiqueta required"/>
+                    <p:inputText id="nit" value="#{clienteFrm.registro.nit}" required="true" maxlength="14"
+                                 requiredMessage="#{msg['msg.nit']}" styleClass="campo-input" placeholder="00000000000000"/>
+                    <h:outputLabel for="activo" value="#{msg['lbl.estado']}:"/>
+                    <p:selectBooleanCheckbox id="activo" value="#{clienteFrm.registro.activo}"
+                                             styleClass="campo-checkbox"/>
+                </p:panelGrid>
+                <br/>
+                <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">
+                    <ui:include src="componentes/Botones-Top.xhtml">
+                        <ui:param name="boton" value="ediciones"/>
+                        <ui:param name="bean" value="#{clienteFrm}"/>
+                    </ui:include>
+                </h:panelGroup>
+            </p:panel>
+        </p:outputPanel>
+    </ui:define>
+</ui:composition>
+</html>

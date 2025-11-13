@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="jakarta.faces.facelets">
+<ui:composition template="componentes/Template.xhtml">
+    <ui:define name="tituloFormulario">
+        #{msg['sb.TipoAlmacen']}
+    </ui:define>
+
+    <!--Tabla definición-->
+    <ui:define name="PanelTabla">
+        <p:outputPanel id="panelTabla" rendered="#{tipoAlmacenFrm.estadoCrud eq 'Nada'}">
+            <h:panelGroup id="tblBotones">
+                <ui:include src="componentes/Botones-Top.xhtml">
+                    <ui:param name="boton" value="nuevo"/>
+                    <ui:param name="bean" value="#{tipoAlmacenFrm}"/>
+                </ui:include>
+            </h:panelGroup>
+            <br/>
+            <!-- Tabla Tipo Almacen-->
+            <p:dataTable id="tblDato" value="#{tipoAlmacenFrm.modelo}" var="ta" lazy="true"
+                         paginator="true" rows="10" selection="#{tipoAlmacenFrm.registro}"
+                         selectionMode="single" rowKey="#{ta.id}" selectionListener="#{tipoAlmacenFrm.selectionHandler}"
+                         styleClass="ui-datatable">
+                <!-- El unico ajax-->
+                <p:ajax event="rowSelect" update=":frmTabla :frmFormulario mensajes"
+                        listener="#{tipoAlmacenFrm.selectionHandler}"/>
+                <!-- Definición de columnas -->
+                <p:column headerText="#{msg['lbl.id']}">
+                    <h:outputText value="#{ta.id}"/>
+                </p:column>
+                <p:column headerText="#{msg['lbl.nombre']}">
+                    <h:outputText value="#{ta.nombre}"/>
+                </p:column>
+                <p:column headerText="#{msg['lbl.estado']}">
+                    <h:outputText value="#{ta.activo?msg['lbl.activo']:msg['lbl.inactivo']}"/>
+                </p:column>
+                <p:column headerText="#{msg['lbl.descripcion']}">
+                    <h:outputText value="#{ta.obsevaciones}"/>
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+    </ui:define>
+    <!--Formulario definición-->
+    <ui:define name="PanelEdicion">
+        <p:outputPanel id="panelEdicion" rendered="#{tipoAlmacenFrm.estadoCrud ne 'Nada'}">
+            <p:panel header="#{msg['lbl.formulario']} #{msg['sb.TipoAlmacen']}" styleClass="panel">
+                <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
+                    <!-- Campos del formulario -->
+                    <h:outputLabel value=" "/>
+                    <h:outputLabel for="nombre" value="#{msg['lbl.nombre']}:" styleClass="etiqueta required"/>
+
+                    <p:inputText id="nombre" value="#{tipoAlmacenFrm.registro.nombre}" required="true"
+                                 requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input"/>
+                    <h:outputLabel for="activo" value="#{msg['lbl.estado']}:"/>
+                    <p:selectBooleanCheckbox id="activo" value="#{tipoAlmacenFrm.registro.activo}"
+                                             styleClass="campo-checkbox"/>
+                    <h:outputLabel for="observaciones" value="#{msg['lbl.descripcion']}:"/>
+                    <p:inputTextarea id="observaciones" value="#{tipoAlmacenFrm.registro.obsevaciones}"
+                                     styleClass="campo-textarea" rows="3"/>
+                </p:panelGrid>
+                <br/>
+                <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">
+                    <ui:include src="componentes/Botones-Top.xhtml">
+                        <ui:param name="boton" value="ediciones"/>
+                        <ui:param name="bean" value="#{tipoAlmacenFrm}"/>
+                    </ui:include>
+                </h:panelGroup>
+            </p:panel>
+        </p:outputPanel>
+    </ui:define>
+</ui:composition>
+
+</html>
+

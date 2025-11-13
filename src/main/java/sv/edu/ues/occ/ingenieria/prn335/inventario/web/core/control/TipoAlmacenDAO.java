@@ -1,0 +1,41 @@
+package sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control;
+
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.TipoAlmacen;
+
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
+
+@Stateless
+@LocalBean
+public class TipoAlmacenDAO extends InventarioDefaultDataAccess<TipoAlmacen> implements Serializable {
+
+    public TipoAlmacenDAO() {
+        super(TipoAlmacen.class);
+    }
+
+
+    @PersistenceContext(unitName = "inventarioPU")
+    protected EntityManager em;
+
+    @Override
+    public EntityManager getEntityManager() {return em;}
+
+    public List<TipoAlmacen> findLikeConsulta(String consulta){
+        if (consulta == null || consulta.isBlank()) {
+            return Collections.emptyList();
+        }
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<TipoAlmacen> cq = cb.createQuery(TipoAlmacen.class);
+        Root<TipoAlmacen> root = cq.from(TipoAlmacen.class);
+        cq.select(root).where(cb.like(cb.lower(root.get("nombre")), "%" + consulta.toLowerCase() + "%"));
+        return em.createQuery(cq).getResultList();
+    }
+}

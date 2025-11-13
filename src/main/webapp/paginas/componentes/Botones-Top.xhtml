@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:fragment rendered="#{boton == 'nuevo'}">
+        <p:commandButton value="#{msg['btn.nuevo']}" icon="pi pi-plus" action="#{bean.btnNuevo}"
+                         update=":frmTabla :frmFormulario mensajes" process="@this" styleClass="ui-button"/>
+    </ui:fragment>
+    <ui:fragment rendered="#{boton == 'ediciones'}">
+        <p:commandButton value="#{msg['btn.guardar']}" icon="pi pi-save"
+                         action="#{bean.btnGuardar}"
+                         update=":frmTabla :frmFormulario mensajes"
+                         process="@form" styleClass="ui-button-success"/>
+        <p:commandButton value="#{msg['btn.eliminar']}" icon="pi pi-trash"
+                         action="#{bean.btnEliminar}"
+                         update=":frmTabla :frmFormulario mensajes"
+                         process="@this" styleClass="ui-button-danger"
+                         rendered="#{bean.estadoCrud eq 'Modificar'}"/>
+        <p:commandButton value="#{msg['btn.cancelar']}" icon="pi pi-times"
+                         action="#{bean.btnCancelar}"
+                         update=":frmTabla :frmFormulario mensajes"
+                         process="@this" styleClass="ui-button-secondary"/>
+    </ui:fragment>
+
+
+</ui:composition>
