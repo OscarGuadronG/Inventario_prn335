@@ -5,21 +5,19 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.TipoAlmacen;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.TipoProducto;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.InventarioDefaultDataAccess;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.TipoAlmacenDAO;
-import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.TipoAlmacen;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.TipoProductoDAO;
 
 import java.io.Serializable;
 import java.util.List;
-
-@Named
 @ViewScoped
-public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen> implements Serializable{
-    private static final long serialVersionUID = 1L;
-
-
+@Named
+public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Serializable {
     @Inject
-    private transient TipoAlmacenDAO taDao;
+    private transient TipoProductoDAO taDao;
 
     @Inject
     FacesContext facesContext;
@@ -27,19 +25,19 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen> implements Serializa
     protected String nombreBean = "Tipo de Almacen";
 
     @Override
-    protected InventarioDefaultDataAccess<TipoAlmacen> getDao() {
+    protected InventarioDefaultDataAccess<TipoProducto> getDao() {
         return taDao;
     }
 
     @Override
-    protected TipoAlmacen buscarRegistroPorId(Object id) throws IllegalAccessException {
+    protected TipoProducto buscarRegistroPorId(Object id) throws IllegalAccessException {
         return taDao.buscarPorId(id);
     }
 
 
     @Override
-    protected TipoAlmacen nuevoRegistro() {
-        return new TipoAlmacen();
+    protected TipoProducto nuevoRegistro() {
+        return new TipoProducto();
     }
 
     @Override
@@ -52,7 +50,9 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen> implements Serializa
         inicializarRegistro();
 
     }
-
+    public List<TipoProducto> findTiposPadre() {
+        return taDao.findTiposPadre();
+    }
     public void setNombreBean(String nombreBean) {
         this.nombreBean = nombreBean;
     }

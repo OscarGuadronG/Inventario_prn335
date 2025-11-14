@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="componentes/Template.xhtml">
+    <ui:define name="tituloFormulario">
+        #{msg['sb.TipoProducto']}
+    </ui:define>
+    <ui:define name="PanelTabla">
+        <p:outputPanel id="panelTabla" rendered="#{tipoProductoFrm.estadoCrud eq 'Nada'}">
+            <h:panelGroup id="tblBotones">
+                <ui:include src="componentes/Botones-Top.xhtml">
+                    <ui:param name="boton" value="nuevo"/>
+                    <ui:param name="bean" value="#{tipoProductoFrm}"/>
+                </ui:include>
+            </h:panelGroup>
+            <br/>
+            <!-- Tabla Tipo Producto-->
+            <p:dataTable id="tblDato" value="#{tipoProductoFrm.modelo}" var="tp" lazy="true"
+                         paginator="true" rows="10" selection="#{tipoProductoFrm.registro}"
+                         selectionMode="single" rowKey="#{tp.id}" selectionListener="#{tipoProductoFrm.selectionHandler}"
+                         styleClass="ui-datatable">
+                <p:ajax event="rowSelect" update=":frmTabla :frmFormulario mensajes"
+                        listener="#{tipoProductoFrm.selectionHandler}"/>
+                <!-- Definición de columnas -->
+                <p:column headerText="#{msg['lbl.id']}">
+                    <h:outputText value="#{tp.id}"/>
+                </p:column>
+                <p:column headerText="#{msg['lbl.nombre']}">
+                    <h:outputText value="#{tp.nombre}"/>
+                </p:column>
+                <p:column headerText="Tipo Padre">
+                    <h:outputText value="#{tp.idTipoProductoPadre.nombre}"/>
+                </p:column>
+                <p:column headerText="#{msg['lbl.estado']}">
+                    <h:outputText value="#{tp.activo?msg['lbl.activo']:msg['lbl.inactivo']}"/>
+                </p:column>
+                <p:column headerText="#{msg['lbl.comentarios']}">
+                    <h:outputText value="#{tp.comentarios}"/>
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+    </ui:define>
+    <ui:define name="PanelEdicion">
+        <p:outputPanel id="panelEdicion" rendered="#{tipoProductoFrm.estadoCrud ne 'Nada'}">
+            <p:panel header="#{msg['lbl.formulario']} #{msg['sb.TipoProducto']}" styleClass="panel">
+                <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
+                    <!-- Campos del formulario -->
+                    <h:outputLabel for="nombre" value="#{msg['lbl.nombre']}:" styleClass="etiqueta required"/>
+                    <p:inputText id="nombre" value="#{tipoProductoFrm.registro.nombre}" required="true"
+                                 requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input"/>
+
+                    <h:outputLabel for="activo" value="#{msg['lbl.estado']}:"/>
+                    <p:selectBooleanCheckbox id="activo" value="#{tipoProductoFrm.registro.activo}"
+                                             styleClass="campo-checkbox"/>
+
+                    <h:outputLabel for="comentarios" value="#{msg['lbl.comentarios']}:"/>
+                    <p:inputTextarea id="comentarios" value="#{tipoProductoFrm.registro.comentarios}"
+                                     styleClass="campo-textarea" rows="3"/>
+
+                    <h:outputLabel for="tipoProductoPadre" value="Tipo Padre:"/>
+                    <p:selectOneMenu id="tipoProductoPadre"
+                                     value="#{tipoProductoFrm.registro.idTipoProductoPadre}"
+                                     converter="tipoProductoConverter"
+                                     style="width: 100%">
+                        <f:selectItem itemLabel="-- Seleccione --"
+                                      itemValue="#{null}" />
+                        <f:selectItems value="#{tipoProductoFrm.findTiposPadre()}"
+                                       var="tipo"
+                                       itemLabel="#{tipo.nombre}"
+                                       itemValue="#{tipo}" />
+                    </p:selectOneMenu>
+
+
+                </p:panelGrid>
+                <br/>
+                <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">
+                    <ui:include src="componentes/Botones-Top.xhtml">
+                        <ui:param name="boton" value="ediciones"/>
+                        <ui:param name="bean" value="#{tipoProductoFrm}"/>
+                    </ui:include>
+                </h:panelGroup>
+            </p:panel>
+        </p:outputPanel>
+    </ui:define>
+</ui:composition>
+</html>

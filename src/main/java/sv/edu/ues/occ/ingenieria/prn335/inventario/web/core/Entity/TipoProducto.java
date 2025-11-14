@@ -8,7 +8,25 @@ import jakarta.validation.constraints.Size;
         @Index(name = "fki_fk_tipo_producto_tipo_producto", columnList = "id_tipo_producto_padre")
 })
 public class TipoProducto {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TipoProducto)) return false;
+        TipoProducto other = (TipoProducto) o;
+        return this.id != null && this.id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return (id == null) ? 0 : id.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "TipoProducto{id=" + id + ", nombre=" + nombre + "}";
+    }
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tipo_producto", nullable = false)
     private Long id;
 

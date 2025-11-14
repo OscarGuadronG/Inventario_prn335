@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="componentes/Template.xhtml">
+   <ui:define name="tituloFormulario">
+      #{msg['sb.Caracteristica']}
+   </ui:define>
+   <ui:define name="PanelTabla">
+      <p:outputPanel id="panelTabla" rendered="#{caracteristicaFrm.estadoCrud eq 'Nada'}">
+         <h:panelGroup id="tblBotones">
+            <ui:include src="componentes/Botones-Top.xhtml">
+               <ui:param name="boton" value="nuevo"/>
+               <ui:param name="bean" value="#{caracteristicaFrm}"/>
+            </ui:include>
+         </h:panelGroup>
+         <br/>
+         <!-- Tabla Característica-->
+         <p:dataTable id="tblDato" value="#{caracteristicaFrm.modelo}" var="car" lazy="true"
+                      paginator="true" rows="10" selection="#{caracteristicaFrm.registro}"
+                      selectionMode="single" rowKey="#{car.id}" selectionListener="#{caracteristicaFrm.selectionHandler}"
+                      styleClass="ui-datatable">
+            <p:ajax event="rowSelect" update=":frmTabla :frmFormulario mensajes"
+                    listener="#{caracteristicaFrm.selectionHandler}"/>
+            <!-- Definición de columnas -->
+            <p:column headerText="#{msg['lbl.id']}">
+               <h:outputText value="#{car.id}"/>
+            </p:column>
+            <p:column headerText="#{msg['lbl.nombre']}">
+               <h:outputText value="#{car.nombre}"/>
+            </p:column>
+            <p:column headerText="Tipo Unidad Medida">
+               <h:outputText value="#{car.idTipoUnidadMedida.nombre}"/>
+            </p:column>
+            <p:column headerText="#{msg['lbl.estado']}">
+               <h:outputText value="#{car.activo?msg['lbl.activo']:msg['lbl.inactivo']}"/>
+            </p:column>
+            <p:column headerText="#{msg['lbl.descripcion']}">
+               <h:outputText value="#{car.descripcion}"/>
+            </p:column>
+         </p:dataTable>
+      </p:outputPanel>
+   </ui:define>
+   <ui:define name="PanelEdicion">
+      <p:outputPanel id="panelEdicion" rendered="#{caracteristicaFrm.estadoCrud ne 'Nada'}">
+         <p:panel header="#{msg['lbl.formulario']} #{msg['sb.Caracteristica']}" styleClass="panel">
+            <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
+               <!-- Campos del formulario -->
+               <h:outputLabel value="Nombre "/>
+               <h:outputLabel for="nombre" value="#{msg['lbl.nombre']}:" styleClass="etiqueta required"/>
+
+               <p:inputText id="nombre" value="#{caracteristicaFrm.registro.nombre}" required="true"
+                            requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input"/>
+               <h:outputLabel for="activo" value="#{msg['lbl.estado']}:"/>
+               <p:selectBooleanCheckbox id="activo" value="#{caracteristicaFrm.registro.activo}"
+                                        styleClass="campo-checkbox"/>
+               <h:outputLabel for="UB" value="Descripcion"/>
+               <p:inputTextarea id="UB" value="#{caracteristicaFrm.registro.descripcion}"
+                                styleClass="campo-textarea" rows="3"/>
+               <h:outputLabel for="idTipoUnidadMedida" value="Tipo Unidad Medida:" styleClass="etiqueta required"/>
+               <p:autoComplete id="idTipoUnidadMedida" value="#{caracteristicaFrm.registro.idTipoUnidadMedida}" required="true"
+                               completeMethod="#{caracteristicaFrm.completarTipounidadMedida}" var="tipo"
+                               itemLabel="#{tipo.nombre}" itemValue="#{tipo}"
+                               converter="tipoUnidadMedidaConverter" dropdown="true"
+                               forceSelection="true" placeholder="Seleccione tipo unidad medida"
+                               requiredMessage="Tipo unidad medida requerido"/>
+
+
+            </p:panelGrid>
+            <br/>
+            <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">
+               <ui:include src="componentes/Botones-Top.xhtml">
+                  <ui:param name="boton" value="ediciones"/>
+                  <ui:param name="bean" value="#{caracteristicaFrm}"/>
+               </ui:include>
+            </h:panelGroup>
+         </p:panel>
+      </p:outputPanel>
+   </ui:define>
+</ui:composition>
+</html>
