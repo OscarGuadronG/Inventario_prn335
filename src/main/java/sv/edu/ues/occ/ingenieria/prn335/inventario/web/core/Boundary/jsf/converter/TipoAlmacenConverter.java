@@ -20,9 +20,7 @@ public class TipoAlmacenConverter implements Converter<TipoAlmacen> {
     public TipoAlmacen getAsObject(FacesContext ctx, UIComponent cmp, String value) {
         if (value == null || value.isBlank()) return null;
         try {
-            System.out.println("encontrado: " + tipoAlmacenDAO.buscarPorId(Integer.valueOf(value)));
             return tipoAlmacenDAO.buscarPorId(Integer.valueOf(value));
-
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
