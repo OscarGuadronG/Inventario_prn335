@@ -165,8 +165,8 @@ public abstract class DefaultFrm<T> implements Serializable {
         registro = nuevoRegistro();
         estadoCrud = ESTADO_CRUD.Crear;
         if(this.registro != null) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Nuevo", "Formulario listo"));
+            String texto = getMessage("btn.nuevo.msg");
+            getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, texto, null));
         }
     }
 
@@ -183,7 +183,6 @@ public abstract class DefaultFrm<T> implements Serializable {
             texto = getMessage("btn.eliminar.error") + " " + getMessage(e.getMessage());
             getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     texto, null));
-            e.printStackTrace();
         }
     }
 

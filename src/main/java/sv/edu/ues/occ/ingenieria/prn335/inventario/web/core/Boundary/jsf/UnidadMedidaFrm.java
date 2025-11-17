@@ -42,7 +42,6 @@ public class UnidadMedidaFrm extends DefaultFrm<UnidadMedida> implements Seriali
     @Override
     protected UnidadMedida nuevoRegistro() {
         UnidadMedida unidadMedida= new UnidadMedida();
-
         unidadMedida.setIdTipoUnidadMedida(this.tipoUnidadMedidaFrm.getRegistro());
         if(unidadMedida.getIdTipoUnidadMedida()==null){
             System.out.println("ID tipo unidad medida nulo");
@@ -68,7 +67,7 @@ public class UnidadMedidaFrm extends DefaultFrm<UnidadMedida> implements Seriali
         this.nombreBean = nombreBean;
     }
     public List<UnidadMedida> buscarPorTipo(Integer idTipoU){
-        return UDao.buscarPorTipo(idTipoU);
+        return UDao.findLikeConsulta(idTipoU);
     }
 
     public String getNombreBean() {
