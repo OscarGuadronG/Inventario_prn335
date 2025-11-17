@@ -103,4 +103,8 @@ public class ClienteFrm extends DefaultFrm<Cliente> implements Serializable {
         }
         super.btnGuardar();
     }
+
+    public List<Cliente> findActivos() {
+        return taDao.findActivos();
+    }
 }

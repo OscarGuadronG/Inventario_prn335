@@ -5,43 +5,46 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.TipoUnidadMedida;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Cliente;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Venta;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.InventarioDefaultDataAccess;
-import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.TipoUnidadMedidaDAO;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.VentaDAO;
 
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.UUID;
+
 @Named
 @ViewScoped
-public class TipoUnidadMedidaFrm extends DefaultFrm<TipoUnidadMedida> implements Serializable {
-
-
+public class VentaFrm extends DefaultFrm<Venta> implements Serializable{
 
     @Inject
-    private transient TipoUnidadMedidaDAO taDao;
+    private transient VentaDAO taDao;
 
     @Inject
     FacesContext facesContext;
 
-    protected String nombreBean = "Tipo de Unidad Medida";
-
-    private List<TipoUnidadMedida> listaTipoUnidadMedida;
+    protected String nombreBean = "Venta";
 
     @Override
-    protected InventarioDefaultDataAccess<TipoUnidadMedida> getDao() {
+    protected InventarioDefaultDataAccess<Venta> getDao() {
         return taDao;
     }
 
     @Override
-    protected TipoUnidadMedida buscarRegistroPorId(Object id) throws IllegalAccessException {
+    protected Venta buscarRegistroPorId(Object id) throws IllegalAccessException {
         return taDao.buscarPorId(id);
     }
 
+
     @Override
-    protected TipoUnidadMedida nuevoRegistro() {
-        TipoUnidadMedida TipoUnidadMedida= new TipoUnidadMedida();
-        TipoUnidadMedida.setActivo(true);
-        return TipoUnidadMedida;
+    protected Venta nuevoRegistro() {
+        Venta venta = new Venta();
+        venta.setId(UUID.randomUUID());
+        venta.setFecha(OffsetDateTime.now());
+
+        return venta;
     }
 
     @Override
@@ -62,7 +65,6 @@ public class TipoUnidadMedidaFrm extends DefaultFrm<TipoUnidadMedida> implements
     public String getNombreBean() {
         return nombreBean;
     }
-
 
 
 }

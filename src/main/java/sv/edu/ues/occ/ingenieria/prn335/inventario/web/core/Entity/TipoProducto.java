@@ -1,18 +1,19 @@
 package sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity;
 
-import jakarta.persistence.*;
+ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "tipo_producto", schema = "public", indexes = {
-        @Index(name = "fki_fk_tipo_producto_tipo_producto", columnList = "id_tipo_producto_padre")
-})
+@Table(name = "tipo_producto", schema = "public")
 public class TipoProducto {
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof TipoProducto)) return false;
         TipoProducto other = (TipoProducto) o;
+        // Igualdad por ID (cuando ya fue asignado)
         return this.id != null && this.id.equals(other.id);
     }
 

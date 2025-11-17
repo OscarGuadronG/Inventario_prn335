@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="componentes/Template.xhtml">
+    <ui:define name="tituloFormulario">
+        #{msg['sb.Compras']}
+    </ui:define>
+    <ui:define name="PanelTabla">
+        <p:outputPanel id="panelTabla" rendered="#{compraFrm.estadoCrud eq 'Nada'}">
+            <h:panelGroup id="tblBotones">
+                <ui:include src="componentes/Botones-Top.xhtml">
+                    <ui:param name="boton" value="nuevo"/>
+                    <ui:param name="bean" value="#{compraFrm}"/>
+                </ui:include>
+            </h:panelGroup>
+            <br/>
+            <!-- Tabla Compra-->
+
+            <p:dataTable id="tblDato" value="#{compraFrm.modelo}" var="r" lazy="true"
+                         rendered="#{compraFrm.estadoCrud eq 'Nada'}"
+                         paginator="true" rows="10" selection="#{compraFrm.registro}"
+                         selectionMode="single" rowKey="#{r.id}" selectionListener="#{compraFrm.selectionHandler}"
+                         styleClass="ui-datatable">
+
+                <p:ajax event="rowSelect"
+                        listener="#{compraFrm.selectionHandler}"
+                        update=":frmTabla :frmFormulario mensajes"/>
+
+                <p:column headerText="ID Compra" style="width:320px" sortBy="#{r.id}">
+                    <h:outputText value="#{r.id}" />
+                </p:column>
+
+                <p:column headerText="Proveedor" >
+                    <h:outputText value="#{r.proveedor != null ? r.proveedor.nombre : 'N/A'}" />
+                </p:column>
+
+                <p:column headerText="Razón Social" >
+                    <h:outputText value="#{r.proveedor != null ? r.proveedor.razonSocial : 'N/A'}" />
+                </p:column>
+
+                <p:column headerText="Fecha">
+                    <h:outputText value="#{r.fecha}">
+                        <f:converter converterId="offsetDateTimeConverter" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Estado" >
+                    <h:outputText value="#{r.estado}" />
+                </p:column>
+
+            </p:dataTable>
+        </p:outputPanel>
+    </ui:define>
+    <ui:define name="PanelEdicion">
+        <p:outputPanel id="panelEdicion" rendered="#{compraFrm.estadoCrud ne 'Nada'}">
+            <p:panel header="#{msg['lbl.formulario']} #{msg['sb.Compra']}" styleClass="panel">
+                <p:tabView>
+                    <p:tab title="Generalidades">
+                        <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
+                            <!-- Campos del formulario -->
+                            <h:outputLabel value=" "/>
+                            <p:outputLabel for="fechaCreacion" value="Fecha Creación:" />
+                            <p:inputText id="fechaCreacion"
+                                         value="#{compraFrm.registro.fecha}"
+                                         disabled="true"
+                                         styleClass="campo-input"
+                                         converter="offsetDateTimeConverter1"/>
+
+                            <h:outputLabel for="compra" value="ID Compra: " styleClass="etiqueta required" disabled="true" rendered="#{compraFrm.estadoCrud ne 'Crear'}"/>
+                            <p:inputText id="compra" value="#{compraFrm.registro.id}"  required="true" disabled="true" rendered="#{compraFrm.estadoCrud ne 'Crear'}"
+                                         requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input" />
+
+                            <h:outputLabel for="proveedor" value="ID Proveedor: " styleClass="etiqueta required" disabled="true" rendered="#{compraFrm.estadoCrud ne 'Crear'}"/>
+                            <p:inputText id="proveedor" value="#{compraFrm.registro.proveedor.id}" required="true" disabled="true" rendered="#{compraFrm.estadoCrud ne 'Crear'}"
+                                         requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input"/>
+
+                            <p:outputLabel for="Proveedores" value="Proveedor:" />
+                            <p:selectOneMenu id="Proveedores"
+                                             value="#{compraFrm.registro.proveedor}"
+                                             converter="proveedorConverter"
+                                             style="width: 100%">
+                                <f:selectItem itemLabel="-- Seleccione --"
+                                              itemValue="#{null}" />
+                                <f:selectItems value="#{proveedorFrm.findActivos()}"
+                                               var="prov"
+                                               itemLabel="#{prov.nombre}"
+                                               itemValue="#{prov}"  />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel for="estado" value="Estado:" />
+                            <p:selectOneMenu id="estado"
+                                             value="#{compraFrm.registro.estado}"
+                                             style="width: 100%"
+                                             required="true"
+                                             requiredMessage="El estado es obligatorio">
+                                <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" />
+                                <f:selectItem itemLabel="Activo" itemValue="ACTIVO" />
+                                <f:selectItem itemLabel="Pendiente" itemValue="PENDIENTE" />
+                                <f:selectItem itemLabel="Completado" itemValue="COMPLETADO" />
+                                <f:selectItem itemLabel="Cancelado" itemValue="CANCELADO" />
+                            </p:selectOneMenu>
+
+                            <h:outputLabel for="observaciones" value="Observaciones"/>
+                            <p:inputTextarea id="observaciones" value="#{compraFrm.registro.observaciones}"
+                                             styleClass="campo-textarea" rows="3"/>
+
+                        </p:panelGrid>
+                        <br/>
+                        <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">
+                            <ui:include src="componentes/Botones-Top.xhtml">
+                                <ui:param name="boton" value="ediciones"/>
+                                <ui:param name="bean" value="#{compraFrm}"/>
+                            </ui:include>
+                        </h:panelGroup>
+                    </p:tab>
+
+                    <p:tab title="Compra detalle"  disabled="#{compraFrm.estadoCrud eq 'Crear' or compraFrm.registro.id == null}"  id="tab2">
+                        <p:commandButton value="Agregar Detalle" icon="pi pi-plus"
+                                         action="#{compraDetalleFrm.btnNuevo()}"
+                                         update=":frmFormulario"
+                                         immediate="true"
+                                         styleClass="p-button p-button-nuevo"
+                        >
+
+                        </p:commandButton>
+                        <p:dataTable id="tblDetalles"
+                                     value="#{compraDetalleFrm.buscarPorCompra(compraFrm.registro.id)}"
+                                     var="detalle"
+                                     emptyMessage="No hay detalles de compra"
+                                     styleClass="table-modern"
+                                     rendered="#{compraDetalleFrm.estadoCrud eq 'Nada'}">
+
+                            <p:column headerText="Producto" style="width: 30%">
+                                <h:outputText value="#{detalle.producto != null ? detalle.producto.nombreProducto : 'N/A'}" />
+                            </p:column>
+
+                            <p:column headerText="Cantidad" style="width: 15%">
+                                <h:outputText value="#{detalle.cantidad}">
+                                    <f:convertNumber maxFractionDigits="2" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Precio Unitario" style="width: 15%">
+                                <h:outputText value="#{detalle.precio}">
+                                    <f:convertNumber type="currency" currencySymbol="$" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Subtotal" style="width: 15%">
+                                <h:outputText value="#{compraDetalleFrm.calcularSubtotal(detalle)}">
+                                    <f:convertNumber type="currency" currencySymbol="$" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Estado" style="width: 10%">
+                                <h:outputText value="#{detalle.estado}" />
+                            </p:column>
+
+                        </p:dataTable>
+
+                        <p:outputPanel id="panelEdicion2" rendered="#{compraDetalleFrm.estadoCrud ne 'Nada'}">
+                            <p:panel header="#{msg['lbl.formulario']} #{msg['sb.Compra']}" styleClass="panel">
+                                <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
+
+                                    <!-- Campos del formulario -->
+                                    <h:outputLabel value=" "/>
+                                    <p:outputLabel for="producto" value="Producto:" />
+                                    <p:selectOneMenu id="producto"
+                                                     value="#{compraDetalleFrm.registro.producto}"
+                                                     converter="productoConverter"
+                                                     style="width: 100%"
+                                                     required="true"
+                                                     requiredMessage="El producto es obligatorio">
+                                        <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" />
+                                        <f:selectItems value="#{productoFrm.findProductosActivos()}"
+                                                       var="prod"
+                                                       itemLabel="#{prod.nombreProducto}"
+                                                       itemValue="#{prod}" />
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel for="cantidad" value="Cantidad:" />
+                                    <p:inputNumber id="cantidad"
+                                                   value="#{compraDetalleFrm.registro.cantidad}"
+                                                   style="width: 100%"
+                                                   required="true"
+                                                   requiredMessage="La cantidad es obligatoria" />
+
+                                    <p:outputLabel for="precio" value="Precio Unitario:" />
+                                    <p:inputNumber id="precio"
+                                                   value="#{compraDetalleFrm.registro.precio}"
+                                                   style="width: 100%"
+                                                   minValue="0.01"
+                                                   maxValue="999999.99"
+                                                   decimalPlaces="2"
+                                                   required="true"
+                                                   requiredMessage="El precio es obligatorio" />
+
+                                    <p:outputLabel for="estadoDetalle" value="Estado:" />
+                                    <p:selectOneMenu id="estadoDetalle"
+                                                     value="#{compraDetalleFrm.registro.estado}"
+                                                     style="width: 100%"
+                                    >
+                                        <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" />
+                                        <f:selectItem itemLabel="Activo" itemValue="ACTIVO" />
+                                        <f:selectItem itemLabel="Cancelado" itemValue="CANCELADO" />
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel for="obs" value="Observaciones " />
+                                    <p:inputTextarea value="#{compraDetalleFrm.registro.observaciones}" id="obs"
+                                    />
+
+                                    <h:outputLabel value=""/>
+
+                                    <ui:include src="componentes/Botones-Top.xhtml">
+                                        <ui:param name="boton" value="ediciones"/>
+                                        <ui:param name="bean" value="#{compraDetalleFrm}"/>
+                                    </ui:include>
+
+                                </p:panelGrid>
+                            </p:panel>
+                        </p:outputPanel>
+
+                    </p:tab>
+                </p:tabView>
+            </p:panel>
+        </p:outputPanel>
+    </ui:define>
+</ui:composition>
+</html>

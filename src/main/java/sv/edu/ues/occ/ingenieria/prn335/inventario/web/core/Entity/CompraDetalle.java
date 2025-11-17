@@ -2,7 +2,7 @@ package sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -10,31 +10,49 @@ import java.util.UUID;
 @Table(name = "compra_detalle", schema = "public")
 public class CompraDetalle {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id_compra_detalle", nullable = false)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_compra")
-    private Compra idCompra;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_compra", nullable = false)
+    private Compra compra;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_producto")
-    private sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Producto idProducto;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_producto", nullable = false)
+    private Producto producto;
 
-    @Column(name = "cantidad", precision = 8, scale = 2)
+    @NotNull
+    @Column(name = "cantidad", precision = 8, scale = 2, nullable = false)
     private BigDecimal cantidad;
 
-    @Column(name = "precio", precision = 8, scale = 2)
+    @NotNull
+    @Column(name = "precio", precision = 8, scale = 2, nullable = false)
     private BigDecimal precio;
 
     @Size(max = 10)
-    @Column(name = "estado", length = 10)
+    @Column(name = "estado", length = 10, nullable = false)
     private String estado;
 
     @Lob
     @Column(name = "observaciones")
     private String observaciones;
 
+    // Constructores
+    public CompraDetalle() {
+    }
+
+    public CompraDetalle(Compra compra, Producto producto, BigDecimal cantidad, BigDecimal precio, String estado) {
+        this.compra = compra;
+        this.producto = producto;
+        this.cantidad = cantidad;
+        this.precio = precio;
+        this.estado = estado;
+    }
+
+    // Getters y Setters
     public UUID getId() {
         return id;
     }
@@ -43,20 +61,20 @@ public class CompraDetalle {
         this.id = id;
     }
 
-    public Compra getIdCompra() {
-        return idCompra;
+    public Compra getCompra() {
+        return compra;
     }
 
-    public void setIdCompra(Compra idCompra) {
-        this.idCompra = idCompra;
+    public void setCompra(Compra compra) {
+        this.compra = compra;
     }
 
-    public sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Producto getIdProducto() {
-        return idProducto;
+    public Producto getProducto() {
+        return producto;
     }
 
-    public void setIdProducto(sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Producto idProducto) {
-        this.idProducto = idProducto;
+    public void setProducto(Producto producto) {
+        this.producto = producto;
     }
 
     public BigDecimal getCantidad() {
@@ -90,5 +108,4 @@ public class CompraDetalle {
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
-
 }

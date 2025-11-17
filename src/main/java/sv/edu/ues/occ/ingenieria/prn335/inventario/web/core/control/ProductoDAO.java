@@ -6,6 +6,8 @@ import jakarta.persistence.PersistenceContext;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Producto;
 
 import java.io.Serializable;
+import java.util.List;
+
 @Stateless
 @LocalBean
 public class ProductoDAO extends InventarioDefaultDataAccess<Producto> implements Serializable {
@@ -17,5 +19,14 @@ public class ProductoDAO extends InventarioDefaultDataAccess<Producto> implement
 
     @Override
     public EntityManager getEntityManager() {return em;}
+
+    //Metodos especificos
+
+    public List<Producto> findProductosActivos() {
+        return em.createQuery(
+                        "SELECT t FROM Producto t WHERE t.activo = true ORDER BY t.nombreProducto",
+                        Producto.class)
+                .getResultList();
+    }
 
 }

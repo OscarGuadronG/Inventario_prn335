@@ -18,4 +18,5 @@ public class VentaDAO extends InventarioDefaultDataAccess<Venta> implements Seri
     @Override
     public EntityManager getEntityManager() {return em;}
 
+
 }

@@ -130,6 +130,9 @@ public abstract class DefaultFrm<T> implements Serializable {
     public void selectionHandler(SelectEvent<T> event) {
         this.registro = event.getObject();
         this.estadoCrud = ESTADO_CRUD.Modificar;
+        if(this.registro==null) {
+            System.out.println(" REGISTRO SELECIONADO VACIO" );
+        }
     }
 
     //Botones de CRUD

@@ -6,6 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Caracteristica;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Stateless
 @LocalBean
@@ -18,4 +19,12 @@ public class CaracteristicaDAO extends InventarioDefaultDataAccess<Caracteristic
 
     @Override
     public EntityManager getEntityManager() {return em;}
+
+    public List<Caracteristica> getListaCompleta(){
+        return em.createQuery(
+                        "SELECT c FROM Caracteristica c ORDER BY c.nombre",
+                        Caracteristica.class)
+                .getResultList();
+
+    }
 }

@@ -5,43 +5,44 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.TipoUnidadMedida;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Compra;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.CompraDAO;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.InventarioDefaultDataAccess;
-import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.TipoUnidadMedidaDAO;
+
 
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 import java.util.List;
+
 @Named
 @ViewScoped
-public class TipoUnidadMedidaFrm extends DefaultFrm<TipoUnidadMedida> implements Serializable {
+public class CompraFrm extends DefaultFrm<Compra> implements Serializable{
 
 
 
     @Inject
-    private transient TipoUnidadMedidaDAO taDao;
+    private transient CompraDAO taDao;
 
     @Inject
     FacesContext facesContext;
 
-    protected String nombreBean = "Tipo de Unidad Medida";
-
-    private List<TipoUnidadMedida> listaTipoUnidadMedida;
+    protected String nombreBean = "Compra";
 
     @Override
-    protected InventarioDefaultDataAccess<TipoUnidadMedida> getDao() {
+    protected InventarioDefaultDataAccess<Compra> getDao() {
         return taDao;
     }
 
     @Override
-    protected TipoUnidadMedida buscarRegistroPorId(Object id) throws IllegalAccessException {
+    protected Compra buscarRegistroPorId(Object id) throws IllegalAccessException {
         return taDao.buscarPorId(id);
     }
 
     @Override
-    protected TipoUnidadMedida nuevoRegistro() {
-        TipoUnidadMedida TipoUnidadMedida= new TipoUnidadMedida();
-        TipoUnidadMedida.setActivo(true);
-        return TipoUnidadMedida;
+    protected Compra nuevoRegistro() {
+        Compra compra = new Compra();
+        compra.setFecha(OffsetDateTime.now());
+        return compra;
     }
 
     @Override
@@ -62,7 +63,6 @@ public class TipoUnidadMedidaFrm extends DefaultFrm<TipoUnidadMedida> implements
     public String getNombreBean() {
         return nombreBean;
     }
-
 
 
 }

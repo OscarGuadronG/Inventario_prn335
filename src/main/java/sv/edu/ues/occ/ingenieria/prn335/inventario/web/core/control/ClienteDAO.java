@@ -9,6 +9,8 @@ import jakarta.persistence.criteria.Root;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Cliente;
 
 import java.io.Serializable;
+import java.util.List;
+
 @Stateless
 @LocalBean
 public class ClienteDAO extends InventarioDefaultDataAccess<Cliente> implements Serializable {
@@ -22,6 +24,12 @@ public class ClienteDAO extends InventarioDefaultDataAccess<Cliente> implements 
     public EntityManager getEntityManager() {return em;}
 
     //Metodos propios
+    public List<Cliente> findActivos() {
+        return em.createQuery(
+                        "SELECT t FROM Cliente t WHERE  t.activo = true ORDER BY t.nombre",
+                        Cliente.class)
+                .getResultList();
+    }
     public boolean DocumentoUnico(String dui) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);

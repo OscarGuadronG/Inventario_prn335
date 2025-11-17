@@ -21,10 +21,11 @@
             <!-- Tabla Tipo Producto-->
             <p:dataTable id="tblDato" value="#{tipoProductoFrm.modelo}" var="tp" lazy="true"
                          paginator="true" rows="10" selection="#{tipoProductoFrm.registro}"
-                         selectionMode="single" rowKey="#{tp.id}" selectionListener="#{tipoProductoFrm.selectionHandler}"
+                         selectionMode="single" rowKey="#{tp.id.longValue()}" selectionListener="#{tipoProductoFrm.selectionHandler}"
                          styleClass="ui-datatable">
-                <p:ajax event="rowSelect" update=":frmTabla :frmFormulario mensajes"
-                        listener="#{tipoProductoFrm.selectionHandler}"/>
+                <p:ajax event="rowSelect" update=":frmTabla :frmFormulario mensajes :frmFormulario:panelEdicion"
+                        listener="#{tipoProductoFrm.selectionHandler}"
+                />
                 <!-- Definición de columnas -->
                 <p:column headerText="#{msg['lbl.id']}">
                     <h:outputText value="#{tp.id}"/>
@@ -47,8 +48,11 @@
     <ui:define name="PanelEdicion">
         <p:outputPanel id="panelEdicion" rendered="#{tipoProductoFrm.estadoCrud ne 'Nada'}">
             <p:panel header="#{msg['lbl.formulario']} #{msg['sb.TipoProducto']}" styleClass="panel">
+                <p:tabView>
+                    <p:tab title="Generalidades">
                 <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
                     <!-- Campos del formulario -->
+                    <h:outputLabel value=" "/>
                     <h:outputLabel for="nombre" value="#{msg['lbl.nombre']}:" styleClass="etiqueta required"/>
                     <p:inputText id="nombre" value="#{tipoProductoFrm.registro.nombre}" required="true"
                                  requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input"/>
@@ -83,6 +87,95 @@
                         <ui:param name="bean" value="#{tipoProductoFrm}"/>
                     </ui:include>
                 </h:panelGroup>
+                    </p:tab>
+
+                    <p:tab title="Tipo Producto Caracteristica"  disabled="#{tipoProductoFrm.estadoCrud eq 'Crear'}" id="tab2">
+                        <p:commandButton value="Nueva Caracteristica"
+                                         action="#{tipoProductoCaracteristicaFrm.btnNuevo}"
+                                         update="tab2"
+                                         process="@this"/>
+                        <p:dataTable id="tblCaracteristicas"
+                                     value="#{tipoProductoCaracteristicaFrm.findByTipoProductoId(tipoProductoFrm.registro.id)}"
+                                     var="caracteristica"
+                                     lazy="true" paginator="true" rows="5"
+                                     rendered="#{tipoProductoCaracteristicaFrm.estadoCrud eq 'Nada'}"
+                                     currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                                     paginatorPosition="bottom"
+                                     emptyMessage="No hay características registradas para este tipo de producto"
+                                     styleClass="ui-datatable"
+                                     selectionMode="single"
+                                     selection="#{tipoProductoCaracteristicaFrm.registro}"
+                                     rowKey="#{caracteristica.id}">
+
+                            <p:ajax event="rowSelect"
+                                    listener="#{tipoProductoCaracteristicaFrm.selectionHandler}"
+                                    update="frmFormulario" />
+
+
+                            <!-- Definición de columnas -->
+                            <p:column headerText="ID" style="width: 80px;" sortBy="#{caracteristica.id}">
+                                <h:outputText value="#{caracteristica.id}" />
+                            </p:column>
+
+                            <p:column headerText="Característica">
+                                <h:outputText value="#{caracteristica.idCaracteristica.nombre}" />
+                            </p:column>
+
+                            <p:column headerText="Obligatorio" style="width: 100px;">
+                                <h:outputText value="#{caracteristica.obligatorio ? 'Sí' : 'No'}" />
+                            </p:column>
+
+                            <p:column headerText="Fecha Creación" sortBy="#{caracteristica.fechaCreacion}">
+                                <h:outputText value="#{caracteristica.fechaCreacion}">
+                                    <f:converter converterId="offsetDateTimeConverter" />
+                                </h:outputText>
+                            </p:column>
+
+                        </p:dataTable>
+
+                        <p:outputPanel id="panelEdicionC" >
+                            <p:panel header="#{msg['lbl.formulario']} " styleClass="panel" rendered="#{tipoProductoCaracteristicaFrm.estadoCrud ne 'Nada'}">
+
+                                <p:outputLabel for="fechaCreacion" value="Fecha Creación:" />
+                                <p:inputText id="fechaCreacion"
+                                             value="#{tipoProductoCaracteristicaFrm.registro.fechaCreacion}"
+                                             disabled="true"
+                                             styleClass="campo-input"
+                                             converter="offsetDateTimeConverter1"/>
+                                <p:outputLabel for="Producto" value="Producto:" />
+                                <p:inputText id="Producto"
+                                             value="#{tipoProductoCaracteristicaFrm.registro.idTipoProducto.nombre}"
+                                             disabled="true"
+                                             styleClass="campo-input"
+                                             />
+
+                                <h:outputLabel for="activoU" value="Obligatorio:"/>
+                                <p:selectBooleanCheckbox id="activoU" value="#{tipoProductoCaracteristicaFrm.registro.obligatorio}"
+                                                         styleClass="campo-checkbox"/>
+
+                                <h:outputLabel for="Caracteristica" value="Caracteristica: "/>
+                                <p:selectOneMenu id="Caracteristica"
+                                                 value="#{tipoProductoCaracteristicaFrm.registro.idCaracteristica}"
+                                                 converter="caracteristicaConverter"
+                                                 style="width: 100%">
+                                    <f:selectItem itemLabel="Seleccione" />
+                                    <f:selectItems value="#{caracteristicaFrm.getListaCompleta()}"
+                                                   var="tipo"
+                                                   itemLabel="#{tipo.nombre}"
+                                                   itemValue="#{tipo}" />
+                                </p:selectOneMenu>
+
+                                <h:outputLabel value=""/>
+
+                                <ui:include src="componentes/Botones-Top.xhtml">
+                                    <ui:param name="boton" value="ediciones"/>
+                                    <ui:param name="bean" value="#{tipoProductoCaracteristicaFrm}"/>
+                                </ui:include>
+                            </p:panel>
+                        </p:outputPanel>
+
+                    </p:tab>
+                </p:tabView>
             </p:panel>
         </p:outputPanel>
     </ui:define>

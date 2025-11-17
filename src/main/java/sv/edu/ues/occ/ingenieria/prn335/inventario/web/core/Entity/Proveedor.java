@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 @Table(name = "proveedor", schema = "public")
 public class Proveedor {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_proveedor", nullable = false)
     private Integer id;
 
@@ -29,6 +30,27 @@ public class Proveedor {
     @Column(name = "observaciones")
     private String observaciones;
 
+    // Métodos equals, hashCode y toString
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Proveedor)) return false;
+        Proveedor other = (Proveedor) o;
+
+        return this.id != null && this.id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return (id == null) ? 0 : id.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Proveedor{id=" + id + ", nombre=" + nombre + ", razonSocial=" + razonSocial + "}";
+    }
+
+    // Getters y Setters
     public Integer getId() {
         return id;
     }
@@ -76,5 +98,4 @@ public class Proveedor {
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
-
 }

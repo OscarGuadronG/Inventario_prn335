@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<ui:composition template="componentes/Template.xhtml">
+    <ui:define name="tituloFormulario">
+        #{msg['sb.Proveedores']}
+    </ui:define>
+
+    <ui:define name="PanelTabla">
+        <p:outputPanel id="panelTabla" rendered="#{proveedorFrm.estadoCrud eq 'Nada'}">
+            <h:panelGroup id="tblBotones">
+                <ui:include src="componentes/Botones-Top.xhtml">
+                    <ui:param name="boton" value="nuevo"/>
+                    <ui:param name="bean" value="#{proveedorFrm}"/>
+                </ui:include>
+            </h:panelGroup>
+            <br/>
+            <!-- Tabla Proveedores -->
+            <p:dataTable id="tblDato" value="#{proveedorFrm.modelo}" var="prov" lazy="true"
+                         paginator="true" rows="10" selection="#{proveedorFrm.registro}"
+                         selectionMode="single" rowKey="#{prov.id}" selectionListener="#{proveedorFrm.selectionHandler}"
+                         styleClass="ui-datatable">
+                <!-- El unico ajax-->
+                <p:ajax event="rowSelect" update=":frmTabla :frmFormulario mensajes"
+                        listener="#{proveedorFrm.selectionHandler}"/>
+                <!-- Definición de columnas -->
+                <p:column headerText="#{msg['lbl.id']}">
+                    <h:outputText value="#{prov.id}"/>
+                </p:column>
+                <p:column headerText="#{msg['lbl.nombre']}">
+                    <h:outputText value="#{prov.nombre}"/>
+                </p:column>
+                <p:column headerText="Razon Social">
+                    <h:outputText value="#{prov.razonSocial}"/>
+                </p:column>
+                <p:column headerText="#{msg['lbl.nit']}">
+                    <h:outputText value="#{prov.nit}"/>
+                </p:column>
+                <p:column headerText="#{msg['lbl.estado']}">
+                    <h:outputText value="#{prov.activo?msg['lbl.activo']:msg['lbl.inactivo']}"/>
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+    </ui:define>
+    <ui:define name="PanelEdicion">
+        <p:outputPanel id="panelEdicion" rendered="#{proveedorFrm.estadoCrud ne 'Nada'}">
+            <p:panel header="#{msg['lbl.formulario']} #{msg['sb.Proveedores']}" styleClass="panel">
+                <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
+
+                    <!-- Campos del formulario -->
+                    <h:outputLabel value=""/>
+                    <h:outputLabel for="nombre" value="#{msg['lbl.nombre']}:" styleClass="etiqueta required"/>
+                    <p:inputText id="nombre" value="#{proveedorFrm.registro.nombre}" required="true"
+                                 requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input"/>
+
+                    <h:outputLabel for="razonSocial" value="Razon Social" styleClass="etiqueta required"/>
+                    <p:inputText id="razonSocial" value="#{proveedorFrm.registro.razonSocial}" required="true"
+                                 requiredMessage="Razon Social" styleClass="campo-input"/>
+
+                    <h:outputLabel for="nit" value="#{msg['lbl.nit']}:" styleClass="etiqueta required"/>
+                    <p:inputText id="nit" value="#{proveedorFrm.registro.nit}" required="true" maxlength="14"
+                                 requiredMessage="#{msg['msg.nit']}" styleClass="campo-input" placeholder="00000000000000"/>
+
+                    <h:outputLabel for="activo" value="#{msg['lbl.estado']}:"/>
+                    <p:selectBooleanCheckbox id="activo" value="#{proveedorFrm.registro.activo}"
+                                             styleClass="campo-checkbox"/>
+
+                    <h:outputLabel for="observaciones" value="Observaciones" styleClass="etiqueta"/>
+                    <p:inputTextarea id="observaciones" value="#{proveedorFrm.registro.observaciones}"
+                                     rows="3" styleClass="campo-textarea"/>
+                </p:panelGrid>
+                <br/>
+                <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">
+                    <ui:include src="componentes/Botones-Top.xhtml">
+                        <ui:param name="boton" value="ediciones"/>
+                        <ui:param name="bean" value="#{proveedorFrm}"/>
+                    </ui:include>
+                </h:panelGroup>
+            </p:panel>
+        </p:outputPanel>
+    </ui:define>
+</ui:composition>
+</html>

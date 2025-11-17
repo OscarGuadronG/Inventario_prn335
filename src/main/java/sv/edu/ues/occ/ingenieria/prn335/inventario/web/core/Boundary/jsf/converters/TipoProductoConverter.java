@@ -20,10 +20,16 @@ public class TipoProductoConverter implements Converter<TipoProducto> {
 
     @Override
     public TipoProducto getAsObject(FacesContext ctx, UIComponent cmp, String value) {
-        if (value == null || value.isBlank()) return null;
+        System.out.println("producto buscado: " + value);
+        if (value == null || value.isBlank()) {
+            System.out.println("ID NULLO");
+            return null;
+        }
+
         try {
-            System.out.println("encontrado: " + tipoProductoDAO.buscarPorId(Integer.valueOf(value)));
-            return tipoProductoDAO.buscarPorId(Integer.valueOf(value));
+long id = Long.parseLong(value);
+            System.out.println("encontrado: " + tipoProductoDAO.buscarPorId(id));
+            return tipoProductoDAO.buscarPorId(id);
 
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
