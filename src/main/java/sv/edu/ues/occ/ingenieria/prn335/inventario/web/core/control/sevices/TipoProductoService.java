@@ -30,6 +30,7 @@ public class TipoProductoService {
         if (hijos == null || hijos.isEmpty()) {
             return;
         }
+
         for (TipoProducto hijo : hijos) {
             NodoTipoProducto nodoHijo = new NodoTipoProducto(hijo);
             nodo.getHijos().add(nodoHijo);
