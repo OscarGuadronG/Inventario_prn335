@@ -1,26 +1,13 @@
 package sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity;
 
  import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
+ import jakarta.validation.constraints.NotBlank;
+ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "tipo_producto", schema = "public")
 public class TipoProducto {
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof TipoProducto)) return false;
-        TipoProducto other = (TipoProducto) o;
-        // Igualdad por ID (cuando ya fue asignado)
-        return this.id != null && this.id.equals(other.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return (id == null) ? 0 : id.hashCode();
-    }
 
     @Override
     public String toString() {
@@ -35,6 +22,7 @@ public class TipoProducto {
     @JoinColumn(name = "id_tipo_producto_padre")
     private TipoProducto idTipoProductoPadre;
 
+    @NotBlank (message = )
     @Size(max = 155)
     @Column(name = "nombre", length = 155)
     private String nombre;
