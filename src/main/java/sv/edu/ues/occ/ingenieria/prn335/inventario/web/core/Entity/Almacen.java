@@ -11,7 +11,7 @@ public class Almacen {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_tipo_almacen")
+    @JoinColumn(name = "id_tipo_almacen", nullable = false)
     private sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.TipoAlmacen idTipoAlmacen;
 
     @Column(name = "activo")

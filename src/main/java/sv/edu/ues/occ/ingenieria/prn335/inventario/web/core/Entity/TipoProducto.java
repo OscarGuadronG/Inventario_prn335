@@ -22,7 +22,7 @@ public class TipoProducto {
     @JoinColumn(name = "id_tipo_producto_padre")
     private TipoProducto idTipoProductoPadre;
 
-    @NotBlank (message = )
+    @NotBlank (message = "{msg.nombre.blanco}")
     @Size(max = 155)
     @Column(name = "nombre", length = 155)
     private String nombre;

@@ -19,7 +19,6 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
     @Inject
     private transient TipoProductoDAO taDao;
 
-
     @Inject
     FacesContext facesContext;
 
@@ -32,15 +31,7 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
 
     @Override
     protected TipoProducto buscarRegistroPorId(Object id) throws IllegalAccessException {
-        Long longId;
-        if (id instanceof Integer) {
-            longId = ((Integer) id).longValue();
-        } else if (id instanceof Long) {
-            longId = (Long) id;
-        } else {
-            throw new IllegalAccessException("Tipo de ID no soportado: " + (id != null ? id.getClass().getName() : "null"));
-        }
-        return taDao.buscarPorId(longId);
+        return taDao.buscarPorId(id);
     }
 
 
