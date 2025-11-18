@@ -6,8 +6,9 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "tipo_unidad_medida", schema = "public")
 public class TipoUnidadMedida {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tipo_unidad_medida", nullable = false)
     private Integer id;
 

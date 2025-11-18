@@ -90,6 +90,7 @@
                     </p:tab>
 
                     <p:tab title="Tipo Producto Caracteristica"  disabled="#{tipoProductoFrm.estadoCrud eq 'Crear'}" id="tab2">
+                        <!--
                         <p:commandButton value="Nueva Caracteristica"
                                          action="#{tipoProductoCaracteristicaFrm.btnNuevo}"
                                          update="tab2"
@@ -110,9 +111,9 @@
                             <p:ajax event="rowSelect"
                                     listener="#{tipoProductoCaracteristicaFrm.selectionHandler}"
                                     update="frmFormulario" />
-
-
+                                -->
                             <!-- Definición de columnas -->
+                        <!--
                             <p:column headerText="ID" style="width: 80px;" sortBy="#{caracteristica.id}">
                                 <h:outputText value="#{caracteristica.id}" />
                             </p:column>
@@ -159,7 +160,7 @@
                                                  converter="caracteristicaConverter"
                                                  style="width: 100%">
                                     <f:selectItem itemLabel="Seleccione" />
-                                    <f:selectItems value="#{caracteristicaFrm.getListaCompleta()}"
+                                    <f:selectItems value="#{caracteristicaFrm.listaCompleta}"
                                                    var="tipo"
                                                    itemLabel="#{tipo.nombre}"
                                                    itemValue="#{tipo}" />
@@ -173,7 +174,7 @@
                                 </ui:include>
                             </p:panel>
                         </p:outputPanel>
-
+                    -->
                     </p:tab>
                 </p:tabView>
             </p:panel>

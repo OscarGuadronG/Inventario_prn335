@@ -34,17 +34,4 @@ public class UnidadMedidaDAO extends InventarioDefaultDataAccess<UnidadMedida> i
         cq.select(root).where(cb.equal(root.get("idTipoUnidadMedida").get("id"), consulta));
         return em.createQuery(cq).getResultList();
     }
-/*
-    public List<UnidadMedida> buscarPorTipo(Integer idTipoU){
-        if (idTipoU == null) {
-            return new ArrayList<>(); // Retorna lista vacía en lugar de lanzar excepción
-        }
-        EntityManager em = getEntityManager();
-        return em.createQuery("SELECT ud FROM UnidadMedida ud WHERE ud.idTipoUnidadMedida.id = :idTipoU", UnidadMedida.class)
-                .setParameter("idTipoU", idTipoU)
-                .getResultList();
-    }
-
-
- */
 }

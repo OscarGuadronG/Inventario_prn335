@@ -23,6 +23,7 @@ public class TipoUnidadMedidaDAO extends InventarioDefaultDataAccess<TipoUnidadM
 
     @Override
     public EntityManager getEntityManager() {return em;}
+
     public List<TipoUnidadMedida> findLikeConsulta(String consulta){
         if (consulta == null || consulta.isBlank()) {
             return Collections.emptyList();

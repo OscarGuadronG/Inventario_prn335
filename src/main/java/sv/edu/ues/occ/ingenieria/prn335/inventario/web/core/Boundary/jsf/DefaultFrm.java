@@ -104,7 +104,13 @@ public abstract class DefaultFrm<T> implements Serializable {
 
             private Object parseRowKey(String rowKey) throws Exception {
                 if (rowKey.matches("\\d+")) {
-                    return Integer.valueOf(rowKey);
+                    try{
+                        // Intentar parsear como Integer
+                        return Integer.valueOf(rowKey);
+                    } catch (NumberFormatException e){
+                        //Intentar parsear como Long
+                        return Long.valueOf(rowKey);
+                    }
                 } else {
                     try {
                         return UUID.fromString(rowKey);
@@ -130,9 +136,6 @@ public abstract class DefaultFrm<T> implements Serializable {
     public void selectionHandler(SelectEvent<T> event) {
         this.registro = event.getObject();
         this.estadoCrud = ESTADO_CRUD.Modificar;
-        if(this.registro==null) {
-            System.out.println(" REGISTRO SELECIONADO VACIO" );
-        }
     }
 
     //Botones de CRUD

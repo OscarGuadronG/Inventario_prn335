@@ -3,6 +3,9 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Caracteristica;
 
 import java.io.Serializable;
@@ -20,11 +23,12 @@ public class CaracteristicaDAO extends InventarioDefaultDataAccess<Caracteristic
     @Override
     public EntityManager getEntityManager() {return em;}
 
-    public List<Caracteristica> getListaCompleta(){
-        return em.createQuery(
-                        "SELECT c FROM Caracteristica c ORDER BY c.nombre",
-                        Caracteristica.class)
-                .getResultList();
-
+    public List<Caracteristica> findLikeConsulta(){
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Caracteristica> cq = cb.createQuery(Caracteristica.class);
+        Root<Caracteristica> root = cq.from(Caracteristica.class);
+        cq.select(root);
+        return em.createQuery(cq).getResultList();
     }
+
 }

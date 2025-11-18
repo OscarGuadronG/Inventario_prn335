@@ -1,20 +1,17 @@
 package sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Boundary.jsf.converters;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.faces.application.FacesMessage;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
 import jakarta.faces.convert.ConverterException;
 import jakarta.faces.convert.FacesConverter;
-
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
+import jakarta.faces.application.FacesMessage;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-@FacesConverter(value = "offsetDateTimeConverter1", managed = true)
+@FacesConverter(value = "offsetDateTimeConverter", managed = true)
 @ApplicationScoped
 public class OffsetDateTimeConverter implements Converter<OffsetDateTime> {
 

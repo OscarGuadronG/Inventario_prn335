@@ -51,7 +51,6 @@
                <!-- Campos del formulario -->
                <h:outputLabel value="Nombre "/>
                <h:outputLabel for="nombre" value="#{msg['lbl.nombre']}:" styleClass="etiqueta required"/>
-
                <p:inputText id="nombre" value="#{caracteristicaFrm.registro.nombre}" required="true"
                             requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input"/>
                <h:outputLabel for="activo" value="#{msg['lbl.estado']}:"/>
@@ -67,8 +66,6 @@
                                converter="tipoUnidadMedidaConverter" dropdown="true"
                                forceSelection="true" placeholder="Seleccione tipo unidad medida"
                                requiredMessage="Tipo unidad medida requerido"/>
-
-
             </p:panelGrid>
             <br/>
             <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">

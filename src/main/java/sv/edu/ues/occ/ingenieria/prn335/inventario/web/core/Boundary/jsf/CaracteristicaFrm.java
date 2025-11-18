@@ -62,7 +62,7 @@ public class CaracteristicaFrm extends DefaultFrm<Caracteristica> implements Ser
         return tipoUnidadMedidaDao.findLikeConsulta(consulta);
     }
     public List<Caracteristica> getListaCompleta() {
-        return taDao.getListaCompleta();
+        return taDao.findLikeConsulta();
     }
 
     public void setNombreBean(String nombreBean) {
