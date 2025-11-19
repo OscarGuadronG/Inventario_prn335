@@ -18,23 +18,17 @@
                 </ui:include>
             </h:panelGroup>
             <br/>
-            <!-- Tabla Tipo Producto-->
-            <p:dataTable id="tblDato" value="#{tipoProductoFrm.modelo}" var="tp" lazy="true"
-                         paginator="true" rows="10" selection="#{tipoProductoFrm.registro}"
-                         selectionMode="single" rowKey="#{tp.id.longValue()}" selectionListener="#{tipoProductoFrm.selectionHandler}"
-                         styleClass="ui-datatable">
-                <p:ajax event="rowSelect" update=":frmTabla :frmFormulario mensajes :frmFormulario:panelEdicion"
-                        listener="#{tipoProductoFrm.selectionHandler}"
-                />
-                <!-- Definición de columnas -->
+            <p:treeTable value="#{tipoProductoFrm.arbol}" var="tp" styleClass="ui-datatable"
+                selectionMode="single"
+                selection="#{tipoProductoFrm.registro}"
+                rowKey="#{tp.id}" >
+                <p:ajax event="select" update=":frmTabla :frmFormulario mensajes"
+                        listener="#{tipoProductoFrm.selectionHandler}"/>
                 <p:column headerText="#{msg['lbl.id']}">
                     <h:outputText value="#{tp.id}"/>
                 </p:column>
                 <p:column headerText="#{msg['lbl.nombre']}">
                     <h:outputText value="#{tp.nombre}"/>
-                </p:column>
-                <p:column headerText="Tipo Padre">
-                    <h:outputText value="#{tp.idTipoProductoPadre.nombre}"/>
                 </p:column>
                 <p:column headerText="#{msg['lbl.estado']}">
                     <h:outputText value="#{tp.activo?msg['lbl.activo']:msg['lbl.inactivo']}"/>
@@ -42,7 +36,19 @@
                 <p:column headerText="#{msg['lbl.comentarios']}">
                     <h:outputText value="#{tp.comentarios}"/>
                 </p:column>
+            </p:treeTable>
+            <!-- Tabla Tipo Producto
+            <p:dataTable id="tblDato" value="#{tipoProductoFrm.modelo}" var="tp" lazy="true"
+                         paginator="true" rows="10" selection="#{tipoProductoFrm.registro}"
+                         selectionMode="single" rowKey="#{tp.id.longValue()}" selectionListener="#{tipoProductoFrm.selectionHandler}"
+                         styleClass="ui-datatable">
+                <p:ajax event="rowSelect" update=":frmTabla :frmFormulario mensajes :frmFormulario:panelEdicion"
+                        listener="#{tipoProductoFrm.selectionHandler}"
+                />
+
+
             </p:dataTable>
+            -->
         </p:outputPanel>
     </ui:define>
     <ui:define name="PanelEdicion">

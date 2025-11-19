@@ -5,14 +5,15 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.TipoAlmacen;
+import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.model.TreeNode;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.TipoProducto;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.InventarioDefaultDataAccess;
-import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.TipoAlmacenDAO;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.TipoProductoDAO;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.services.TipoProductoService;
 
 import java.io.Serializable;
-import java.util.List;
+
 @Named
 @ViewScoped
 public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Serializable {
@@ -23,6 +24,11 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
     FacesContext facesContext;
 
     protected String nombreBean = "Tipo de producto";
+
+    @Inject
+    private TipoProductoService servicio;
+
+    private TreeNode<TipoProducto> arbol;
 
     @Override
     protected InventarioDefaultDataAccess<TipoProducto> getDao() {
@@ -47,13 +53,19 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
 
     @PostConstruct
     public void inicializar(){
+        this.arbol = getArbol();
         inicializarRegistro();
-
+    }
+    //Reescritura del manejador de selección
+    public void selectionHandler(NodeSelectEvent event) {
+        this.registro = (TipoProducto) event.getTreeNode().getData();
+        this.estadoCrud = ESTADO_CRUD.Modificar;
     }
 
-    public List<TipoProducto> findTiposPadre() {
-        return taDao.findTiposPadre();
+    public TreeNode<TipoProducto> getArbol() {
+        return servicio.construirArbolDesdePadres();
     }
+
     public void setNombreBean(String nombreBean) {
         this.nombreBean = nombreBean;
     }
@@ -61,6 +73,5 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
     public String getNombreBean() {
         return nombreBean;
     }
-
 
 }

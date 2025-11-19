@@ -27,7 +27,7 @@ public class TipoProductoDAO extends InventarioDefaultDataAccess<TipoProducto> i
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<TipoProducto> cq = cb.createQuery(TipoProducto.class);
         Root<TipoProducto> root = cq.from(TipoProducto.class);
-        cq.select(root).where(cb.equal(root.get("idTipoProductoPadre"), padre.getId()));
+        cq.select(root).where(cb.equal(root.get("idTipoProductoPadre"), padre));
         return em.createQuery(cq).getResultList();
     }
 
