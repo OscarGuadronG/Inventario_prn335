@@ -16,19 +16,16 @@ import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.TipoUnidadMe
 public class TipoProductoConverter implements Converter<TipoProducto> {
 
     @Inject
-        private TipoProductoDAO tipoProductoDAO;
+    private TipoProductoDAO tipoProductoDAO;
 
     @Override
     public TipoProducto getAsObject(FacesContext ctx, UIComponent cmp, String value) {
-        System.out.println("producto buscado: " + value);
         if (value == null || value.isBlank()) {
-            System.out.println("ID NULLO");
             return null;
         }
 
         try {
-long id = Long.parseLong(value);
-            System.out.println("encontrado: " + tipoProductoDAO.buscarPorId(id));
+            long id = Long.parseLong(value);
             return tipoProductoDAO.buscarPorId(id);
 
         } catch (IllegalAccessException e) {

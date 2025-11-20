@@ -13,6 +13,7 @@ import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.TipoProducto
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.services.TipoProductoService;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Named
 @ViewScoped
@@ -28,6 +29,8 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
     @Inject
     private TipoProductoService servicio;
 
+    private TreeNode<TipoProducto> nodoSeleccionado;
+
     private TreeNode<TipoProducto> arbol;
 
     @Override
@@ -39,7 +42,6 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
     protected TipoProducto buscarRegistroPorId(Object id) throws IllegalAccessException {
         return taDao.buscarPorId(id);
     }
-
 
     @Override
     protected TipoProducto nuevoRegistro() {
@@ -57,8 +59,9 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
         inicializarRegistro();
     }
     //Reescritura del manejador de selección
-    public void selectionHandler(NodeSelectEvent event) {
-        this.registro = (TipoProducto) event.getTreeNode().getData();
+    public void oneSelectNodo(NodeSelectEvent event) {
+        this.nodoSeleccionado = event.getTreeNode();
+        this.registro = nodoSeleccionado.getData();
         this.estadoCrud = ESTADO_CRUD.Modificar;
     }
 
@@ -74,4 +77,27 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
         return nombreBean;
     }
 
+    public TreeNode<TipoProducto> getNodoSeleccionado() {
+        return nodoSeleccionado;
+    }
+
+    public void setNodoSeleccionado(TreeNode<TipoProducto> nodoSeleccionado) {
+        this.nodoSeleccionado = nodoSeleccionado;
+    }
+
+    public List<TipoProducto> completarTipoProducto(String consulta) throws Exception {
+        return taDao.findLikeConsulta(consulta);
+    }
+    public String armarJerarquia(TipoProducto tipo) {
+        if (tipo == null) return "";
+        String nombre = tipo.getNombre();
+
+        TipoProducto padre = tipo.getIdTipoProductoPadre();
+        while (padre != null) {
+            nombre = padre.getNombre() + " > " + nombre;
+            padre = padre.getIdTipoProductoPadre();
+        }
+
+        return nombre;
+    }
 }
