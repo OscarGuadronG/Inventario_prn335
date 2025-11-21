@@ -140,7 +140,6 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
     }
 
     //------------------------Elementos de subFormulario ------------------------------
-    protected String nombreSubFormulario = "Característica de Tipo de Producto";
     protected TipoProductoCaracteristica detalle;
     protected ESTADO_CRUD estadoSubFormulario = ESTADO_CRUD.Nada;
     protected List<TipoProductoCaracteristica> listaDetalle;
@@ -223,7 +222,6 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
                 .filter(d -> d.getIdCaracteristica() != null)
                 .map(d -> d.getIdCaracteristica().getId())
                 .toList();
-
         try {
             return caracteristicaDao.findLikeConsulta(texto, idsOmitir);
         } catch (Exception e) {
@@ -262,13 +260,5 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
 
     public void setDetalle(TipoProductoCaracteristica detalle) {
         this.detalle = detalle;
-    }
-
-    public String getNombreSubFormulario() {
-        return nombreSubFormulario;
-    }
-
-    public void setNombreSubFormulario(String nombreSubFormulario) {
-        this.nombreSubFormulario = nombreSubFormulario;
     }
 }

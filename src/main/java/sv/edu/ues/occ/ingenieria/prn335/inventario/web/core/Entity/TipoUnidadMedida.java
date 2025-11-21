@@ -1,6 +1,7 @@
 package sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -12,14 +13,16 @@ public class TipoUnidadMedida {
     @Column(name = "id_tipo_unidad_medida", nullable = false)
     private Integer id;
 
-    @Size(max = 155)
+    @Size(max = 30, message = "{msg.nombre.longitud}")
+    @NotBlank(message="{msg.nombre.blanco}")
     @Column(name = "nombre", length = 155)
     private String nombre;
 
     @Column(name = "activo")
     private Boolean activo;
 
-    @Size(max = 155)
+    @Size(max = 30, message = "{msg.nombre.longitud}")
+    @NotBlank(message = "{msg.nombre.blanco}")
     @Column(name = "unidad_base", length = 155)
     private String unidadBase;
 
