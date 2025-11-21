@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="componentes/Template.xhtml">
+   <ui:define name="tituloFormulario">
+      #{msg['sb.Kardex']}
+   </ui:define>
+   <ui:define name="PanelTabla">
+      <p:outputPanel id="panelTabla" rendered="#{kardexFrm.estadoCrud eq 'Nada'}">
+         <h:panelGroup id="tblBotones">
+            <ui:include src="componentes/Botones-Top.xhtml">
+               <ui:param name="boton" value="nuevo"/>
+               <ui:param name="bean" value="#{kardexFrm}"/>
+            </ui:include>
+         </h:panelGroup>
+         <br/>
+
+         <!-- Tabla Kardex -->
+         <p:dataTable id="tblDato" value="#{kardexFrm.modelo}" var="r" lazy="true"
+                      rendered="#{kardexFrm.estadoCrud eq 'Nada'}"
+                      paginator="true" rows="10" selection="#{kardexFrm.registro}"
+                      selectionMode="single" rowKey="#{r.id}"
+                      selectionListener="#{kardexFrm.selectionHandler}"
+                      styleClass="ui-datatable">
+
+            <p:ajax event="rowSelect"
+                    listener="#{kardexFrm.selectionHandler}"
+                    update=":frmTabla :frmFormulario mensajes"/>
+
+            <p:column headerText="ID Kardex" style="width:320px" sortBy="#{r.id}">
+               <h:outputText value="#{r.id}" />
+            </p:column>
+
+            <p:column headerText="Producto" sortBy="#{r.idProducto.nombreProducto}">
+               <h:outputText value="#{r.idProducto != null ? r.idProducto.nombreProducto: 'N/A'}" />
+            </p:column>
+
+            <p:column headerText="Fecha" sortBy="#{r.fecha}">
+               <h:outputText value="#{r.fecha}">
+                  <f:converter converterId="offsetDateTimeConverter" />
+               </h:outputText>
+            </p:column>
+
+            <p:column headerText="Cantidad" style="width:100px">
+               <h:outputText value="#{r.cantidad}">
+                  <f:convertNumber maxFractionDigits="2" />
+               </h:outputText>
+            </p:column>
+
+            <p:column headerText="Precio" style="width:100px">
+               <h:outputText value="#{r.precio}">
+                  <f:convertNumber type="currency" currencySymbol="$" />
+               </h:outputText>
+            </p:column>
+
+            <p:column headerText="Cantidad Actual" style="width:100px">
+               <h:outputText value="#{r.cantidadActual}">
+                  <f:convertNumber maxFractionDigits="2" />
+               </h:outputText>
+            </p:column>
+
+            <p:column headerText="Precio Actual" style="width:100px">
+               <h:outputText value="#{r.precioActual}">
+                  <f:convertNumber type="currency" currencySymbol="$" />
+               </h:outputText>
+            </p:column>
+
+            <p:column headerText="Fecha" sortBy="#{r.idCompraDetalle}">
+               <h:outputText value="#{r.idCompraDetalle}">
+
+               </h:outputText>
+            </p:column>
+
+            <p:column headerText="Fecha" sortBy="#{r.idVentaDetalle}">
+               <h:outputText value="#{r.idVentaDetalle}">
+
+               </h:outputText>
+            </p:column>
+
+         </p:dataTable>
+      </p:outputPanel>
+   </ui:define>
+   <ui:define name="PanelEdicion">
+      <p:outputPanel id="panelEdicion" rendered="#{kardexFrm.estadoCrud ne 'Nada'}">
+         <p:panel header="#{msg['lbl.formulario']} #{msg['sb.Kardex']}" styleClass="panel">
+            <p:tabView>
+               <p:tab title="Generalidades">
+                  <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
+                     <!-- Campos del formulario -->
+                     <h:outputLabel value=" "/>
+
+                     <p:outputLabel for="idKardex" value="ID Kardex:" styleClass="etiqueta" rendered="#{kardexFrm.estadoCrud ne 'Crear'}"/>
+                     <p:inputText id="idKardex" value="#{kardexFrm.registro.id}"
+                                  disabled="true" rendered="#{kardexFrm.estadoCrud ne 'Crear'}"
+                                  styleClass="campo-input" />
+
+                     <p:outputLabel for="fecha" value="Fecha:" styleClass="etiqueta required"/>
+                     <p:inputText id="fecha" value="#{kardexFrm.registro.fecha}"
+                                  required="true" requiredMessage="La fecha es obligatoria"
+                                  styleClass="campo-input">
+                        <f:converter converterId="offsetDateTimeConverter" />
+                     </p:inputText>
+
+                     <p:outputLabel for="producto" value="Producto:" styleClass="etiqueta required"/>
+                     <p:autoComplete id="producto"
+                                     value="#{kardexFrm.registro.idProducto}"
+                                     completeMethod="#{productoFrm.autocompleteProducto}"
+                                     var="prod"
+                                     itemLabel="#{prod.nombreProducto}"
+                                     itemValue="#{prod}"
+                                     converter="productoConverter"
+                                     required="true"
+                                     requiredMessage="El producto es obligatorio"
+                                     style="width: 100%">
+
+                        <p:ajax event="itemSelect" update="@form"/>
+
+                        <!-- Mostrar información adicional del producto -->
+                        <f:facet name="itemtip">
+                           <h:panelGrid columns="2" style="width: 100%">
+                              <h:outputText value="Nombre:" style="font-weight: bold"/>
+                              <h:outputText value="#{prod.nombreProducto}"/>
+                              <h:outputText value="Referencia:" style="font-weight: bold"/>
+                              <h:outputText value="#{prod.referenciaExterna}"/>
+                              <h:outputText value="Estado:" style="font-weight: bold"/>
+                              <h:outputText value="#{prod.activo ? 'Activo' : 'Inactivo'}"/>
+                           </h:panelGrid>
+                        </f:facet>
+                     </p:autoComplete>
+
+                     <p:outputLabel for="cantidad" value="Cantidad:" styleClass="etiqueta required"/>
+                     <p:inputNumber id="cantidad" value="#{kardexFrm.registro.cantidad}"
+                                    required="true" requiredMessage="La cantidad es obligatoria"
+                                    minValue="0" decimalPlaces="2"
+                                    style="width: 100%"/>
+
+                     <p:outputLabel for="precio" value="Precio:" styleClass="etiqueta required"/>
+                     <p:inputNumber id="precio" value="#{kardexFrm.registro.precio}"
+                                    required="true" requiredMessage="El precio es obligatorio"
+                                    minValue="0" decimalPlaces="2"
+                                    style="width: 100%"/>
+
+                     <p:outputLabel for="cantidadActual" value="Cantidad Actual:" styleClass="etiqueta required"/>
+                     <p:inputNumber id="cantidadActual" value="#{kardexFrm.registro.cantidadActual}"
+                                    required="true" requiredMessage="La cantidad actual es obligatoria"
+                                    minValue="0" decimalPlaces="2"
+                                    style="width: 100%"/>
+
+                     <p:outputLabel for="precioActual" value="Precio Actual:" styleClass="etiqueta required"/>
+                     <p:inputNumber id="precioActual" value="#{kardexFrm.registro.precioActual}"
+                                    required="true" requiredMessage="El precio actual es obligatorio"
+                                    minValue="0" decimalPlaces="2"
+                                    style="width: 100%"/>
+
+                     <p:outputLabel for="cd" value="ID compra detalle" styleClass="etiqueta required"/>
+                     <p:inputText id="cd" value="#{kardexFrm.registro.idCompraDetalle.id}"
+                                  required="true" requiredMessage="La fecha es obligatoria"
+                                  styleClass="campo-input">
+
+                     </p:inputText>
+
+                     <p:outputLabel for="vd" value="ID Venta detalle" styleClass="etiqueta required"/>
+                     <p:inputText id="vd" value="#{kardexFrm.registro.idVentaDetalle.id}"
+                                  required="true" requiredMessage="La fecha es obligatoria"
+                                  styleClass="campo-input">
+
+                     </p:inputText>
+
+                  </p:panelGrid>
+                  <br/>
+                  <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">
+                     <ui:include src="componentes/Botones-Top.xhtml">
+                        <ui:param name="boton" value="ediciones"/>
+                        <ui:param name="bean" value="#{kardexFrm}"/>
+                     </ui:include>
+                  </h:panelGroup>
+               </p:tab>
+
+               <p:tab title="Detalles Kardex" disabled="#{kardexFrm.estadoCrud eq 'Crear' or kardexFrm.registro.id == null}" id="tab2">
+                  <p:commandButton value="Agregar Detalle" icon="pi pi-plus"
+                                   action="#{kardexDetalleFrm.btnNuevo()}"
+                                   update=":frmFormulario"
+                                   immediate="true"
+                                   styleClass="p-button p-button-nuevo">
+                     <f:setPropertyActionListener target="#{kardexDetalleFrm.kardexSeleccionado}" value="#{kardexFrm.registro}" />
+                  </p:commandButton>
+
+                  <p:dataTable id="tblDetalles"
+                               value="#{kardexDetalleFrm.cargarDetallesPorKardex(kardexFrm.registro)}"
+                               var="detalle"
+                               lazy="true"
+                               emptyMessage="No hay detalles de kardex"
+                               rendered="#{kardexDetalleFrm.estadoCrud eq 'Nada'}">
+
+                     <p:column headerText="ID Detalle" style="width: 20%">
+                        <h:outputText value="#{detalle.id}" />
+                     </p:column>
+
+                     <p:column headerText="Lote" style="width: 30%">
+                        <h:outputText value="#{detalle.lote}" />
+                     </p:column>
+
+                     <p:column headerText="Estado" style="width: 15%">
+                        <h:outputText value="#{detalle.activo ? 'Activo' : 'Inactivo'}" />
+                     </p:column>
+
+                  </p:dataTable>
+
+                  <p:outputPanel id="panelEdicion2" rendered="#{kardexDetalleFrm.estadoCrud ne 'Nada'}">
+                     <p:panel header="Detalle de Kardex" styleClass="panel">
+                        <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
+
+                           <!-- Campos del formulario -->
+                           <h:outputLabel value=" "/>
+
+                           <p:outputLabel for="idDetalle" value="ID Detalle:" rendered="#{kardexDetalleFrm.estadoCrud ne 'Crear'}"/>
+                           <p:inputText id="idDetalle" value="#{kardexDetalleFrm.registro.id}"
+                                        disabled="true" rendered="#{kardexDetalleFrm.estadoCrud ne 'Crear'}"
+                                        styleClass="campo-input" />
+
+                           <p:outputLabel for="kardexPadre" value="Kardex:" />
+                           <p:inputText id="kardexPadre" value="#{kardexFrm.registro.id}"
+                                        disabled="true"
+                                        styleClass="campo-input" />
+
+                           <p:outputLabel for="lote" value="Lote:" />
+                           <p:inputText id="lote" value="#{kardexDetalleFrm.registro.lote}"
+                                        styleClass="campo-input" maxlength="255"/>
+
+                           <p:outputLabel for="activoDetalle" value="Estado:" />
+                           <p:selectBooleanCheckbox id="activoDetalle" value="#{kardexDetalleFrm.registro.activo}"
+                                                    styleClass="campo-checkbox"/>
+
+                           <h:outputLabel value=""/>
+
+                           <ui:include src="componentes/Botones-Top.xhtml">
+                              <ui:param name="boton" value="ediciones"/>
+                              <ui:param name="bean" value="#{kardexDetalleFrm}"/>
+                           </ui:include>
+
+                        </p:panelGrid>
+                     </p:panel>
+                  </p:outputPanel>
+               </p:tab>
+            </p:tabView>
+         </p:panel>
+      </p:outputPanel>
+   </ui:define>
+</ui:composition>
+</html>

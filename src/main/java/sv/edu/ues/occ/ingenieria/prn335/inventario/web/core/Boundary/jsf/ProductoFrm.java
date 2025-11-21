@@ -71,8 +71,11 @@ public class ProductoFrm extends DefaultFrm<Producto> implements Serializable {
     public String getNombreBean() {
         return nombreBean;
     }
-
+//especificos
     public List<Producto> findProductosActivos() {
         return taDao.findProductosActivos();
+    }
+    public List<Producto> autocompleteProducto(String consulta) {
+        return taDao.autocompleteProducto(consulta);
     }
 }

@@ -11,7 +11,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-@FacesConverter(value = "offsetDateTimeConverter", managed = true)
+@FacesConverter(value = "offsetDateTimeConverter1", managed = true)
 @ApplicationScoped
 public class OffsetDateTimeConverter implements Converter<OffsetDateTime> {
 

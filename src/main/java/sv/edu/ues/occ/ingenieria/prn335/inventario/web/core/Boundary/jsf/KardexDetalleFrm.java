@@ -25,7 +25,7 @@ public class KardexDetalleFrm extends DefaultFrm<KardexDetalle> implements Seria
     FacesContext facesContext;
 
     private Kardex kardexSeleccionado;
-    private List<KardexDetalle> detallesPorKardex;
+
 
     protected String nombreBean = "KardexDetalle";
 
@@ -44,12 +44,9 @@ public class KardexDetalleFrm extends DefaultFrm<KardexDetalle> implements Seria
         KardexDetalle detalle = new KardexDetalle();
         detalle.setId(UUID.randomUUID());
         detalle.setActivo(true);
-
-        // Si hay un kardex seleccionado, asociarlo automáticamente
         if (kardexSeleccionado != null) {
             detalle.setIdKardex(kardexSeleccionado);
         }
-
         return detalle;
     }
 
@@ -64,18 +61,17 @@ public class KardexDetalleFrm extends DefaultFrm<KardexDetalle> implements Seria
     }
 
 //ESPECIFICOS
-    public void cargarDetallesPorKardex(Kardex kardex) {
+    public List<KardexDetalle> cargarDetallesPorKardex(Kardex kardex) {
         this.kardexSeleccionado = kardex;
         if (kardex != null) {
-            this.detallesPorKardex = kardexDetalleDAO.findByKardex(kardex);
+           return  kardexDetalleDAO.findByKardex(kardex);
         } else {
-            this.detallesPorKardex = null;
+            System.err.println("ERROR: Kardex no encontrado");
+            return null;
         }
     }
 
-    public List<KardexDetalle> getDetallesPorKardex() {
-        return detallesPorKardex;
-    }
+
 
     public Kardex getKardexSeleccionado() {
         return kardexSeleccionado;
