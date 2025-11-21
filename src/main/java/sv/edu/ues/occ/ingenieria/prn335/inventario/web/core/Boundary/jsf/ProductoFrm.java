@@ -36,15 +36,13 @@ public class ProductoFrm extends DefaultFrm<Producto> implements Serializable {
 
     @Override
     protected Producto buscarRegistroPorId(Object id) throws IllegalAccessException {
-        Long longId;
-        if (id instanceof Integer) {
-            longId = ((Integer) id).longValue();
-        } else if (id instanceof Long) {
-            longId = (Long) id;
+        if (id instanceof UUID) {
+            return taDao.buscarPorId(id);
+        } else if (id instanceof String) {
+            return taDao.buscarPorId(UUID.fromString((String) id));
         } else {
             throw new IllegalAccessException("Tipo de ID no soportado: " + (id != null ? id.getClass().getName() : "null"));
         }
-        return taDao.buscarPorId(longId);
     }
 
 
@@ -73,6 +71,7 @@ public class ProductoFrm extends DefaultFrm<Producto> implements Serializable {
     public String getNombreBean() {
         return nombreBean;
     }
+
     public List<Producto> findProductosActivos() {
         return taDao.findProductosActivos();
     }

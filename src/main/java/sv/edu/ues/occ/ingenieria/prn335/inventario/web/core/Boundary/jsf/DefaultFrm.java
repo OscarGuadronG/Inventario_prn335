@@ -250,6 +250,5 @@ public abstract class DefaultFrm<T> implements Serializable {
         this.lista = lista;
     }
 
-    //Metodos propios
 
 }

@@ -19,7 +19,7 @@ public class TipoProductoCaracteristicaDAO extends InventarioDefaultDataAccess<T
 
     @Override
     public EntityManager getEntityManager() {return em;}
-
+//ESPECIFICOS
     public List<TipoProductoCaracteristica> findByTipoProductoId(Long idTipoProducto) {
         return em.createQuery(
                         "SELECT tpc FROM TipoProductoCaracteristica tpc WHERE tpc.idTipoProducto.id = :idTipoProducto ORDER BY tpc.idCaracteristica.nombre",
