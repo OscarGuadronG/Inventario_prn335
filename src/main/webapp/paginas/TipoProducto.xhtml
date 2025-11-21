@@ -42,7 +42,7 @@
     <ui:define name="PanelEdicion">
         <p:outputPanel id="panelEdicion" rendered="#{tipoProductoFrm.estadoCrud ne 'Nada'}">
             <p:panel header="#{msg['lbl.formulario']} #{msg['sb.TipoProducto']}" styleClass="panel">
-                <p:tabView>
+                <p:tabView id="tabView">
                     <p:tab title="Generalidades">
                         <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
                             <h:outputLabel for="nombre" value="#{msg['lbl.nombre']}:" styleClass="etiqueta required"/>
@@ -59,12 +59,13 @@
 
                             <h:outputLabel for="tipoProductoPadre" value="Tipo Padre:"/>
 
-                                <p:autoComplete id="tipoProductoPadre" value="#{tipoProductoFrm.registro.idTipoProductoPadre}"
-                                                completeMethod="#{tipoProductoFrm.completarTipoProducto}" var="tipo"
-                                                itemLabel="#{tipoProductoFrm.armarJerarquia(tipo)}"
-                                                itemValue="#{tipo}"
-                                                converter="tipoProductoConverter" dropdown="true"
-                                                forceSelection="true" placeholder="Seleccione un tipo de producto padre"/>
+                            <p:autoComplete id="tipoProductoPadre"
+                                            value="#{tipoProductoFrm.registro.idTipoProductoPadre}"
+                                            completeMethod="#{tipoProductoFrm.completarTipoProducto}" var="tipo"
+                                            itemLabel="#{tipoProductoFrm.armarJerarquia(tipo)}"
+                                            itemValue="#{tipo}"
+                                            converter="tipoProductoConverter" dropdown="true"
+                                            forceSelection="true" placeholder="Seleccione un tipo de producto padre"/>
 
                         </p:panelGrid>
                         <br/>
@@ -82,7 +83,7 @@
                             <p:commandButton value="#{msg['btn.nuevo']}"
                                              icon="pi pi-plus"
                                              action="#{tipoProductoFrm.SubBtnNuevo}"
-                                             update=":frmFormulario mensajes"
+                                             update="tab2 mensajes"
                                              process="@this"
                                              styleClass="ui-button"/>
                             <p:dataTable id="tblCaracteristicas"
@@ -93,7 +94,7 @@
                                          rowKey="#{cr.id}"
                                          emptyMessage="No hay características registradas para este tipo de producto"
                                          styleClass="ui-datatable">
-                                <p:ajax event="rowSelect" update=":frmFormulario mensajes"
+                                <p:ajax event="rowSelect" update="tab2 mensajes"
                                         listener="#{tipoProductoFrm.subSelectionHandler}"/>
                                 <p:column headerText="ID" style="width: 80px;" sortBy="#{cr.id}">
                                     <h:outputText value="#{cr.id}"/>
@@ -114,41 +115,46 @@
                                 </p:column>
                             </p:dataTable>
                         </p:outputPanel>
-                        <p:outputPanel id="panelEdicionC" >
-                            <p:panel header="#{msg['lbl.formulario']} " styleClass="panel" rendered="#{tipoProductoCaracteristicaFrm.estadoCrud ne 'Nada'}">
-
-                                <p:outputLabel for="fechaCreacion" value="Fecha Creación:" />
-                                <ui:remove>
-                                <p:inputText id="fechaCreacion"
-                                             value="#{tipoProductoCaracteristicaFrm.registro.fechaCreacion}"
-                                             disabled="true"
-                                             styleClass="campo-input"
-                                             converter="offsetDateTimeConverter1"/>
-                                <p:outputLabel for="Producto" value="Producto:" />
-                                <p:inputText id="Producto"
-                                             value="#{tipoProductoCaracteristicaFrm.registro.idTipoProducto.nombre}"
-                                             disabled="true"
-                                             styleClass="campo-input"
-                                             />
-
-                                <h:outputLabel for="activoU" value="Obligatorio:"/>
-                                <p:selectBooleanCheckbox id="activoU" value="#{tipoProductoCaracteristicaFrm.registro.obligatorio}"
+                        <p:outputPanel id="panelEdicionC" rendered="#{tipoProductoFrm.estadoSubFormulario ne 'Nada'}">
+                            <p:panel header="#{msg['lbl.formulario']} " styleClass="panel">
+                                <p:outputLabel for="dpFechaCreacion" value="Fecha de creación"/>
+                                <p:datePicker id="dpFechaCreacion"
+                                              value="#{tipoProductoFrm.detalle.fechaCreacion}"
+                                              showTime="true"
+                                              hourFormat="24"
+                                              timeInput="true"
+                                              timeZone="America/El_Salvador"
+                                              pattern="yyyy-MM-dd'T'HH:mm"
+                                              converter="offsetDateTimeConverter"
+                                              required="true"
+                                              requiredMessage="La fecha es obligatoria"
+                                              touchUI="false" />
+                                <h:outputLabel for="obligatorio" value="Obligatorio:"/>
+                                <p:selectBooleanCheckbox id="obligatorio" value="#{tipoProductoFrm.detalle.obligatorio}"
                                                          styleClass="campo-checkbox"/>
-
-                                <h:outputLabel for="Caracteristica" value="Caracteristica: "/>
-                                <p:selectOneMenu id="Caracteristica"
-                                                 value="#{tipoProductoCaracteristicaFrm.registro.idCaracteristica}"
-                                                 converter="caracteristicaConverter"
-                                                 style="width: 100%">
-                                    <f:selectItem itemLabel="Seleccione" />
-                                    <f:selectItems value="#{caracteristicaFrm.listaCompleta}"
-                                                   var="tipo"
-                                                   itemLabel="#{tipo.nombre}"
-                                                   itemValue="#{tipo}" />
-                                </p:selectOneMenu>
-                                </ui:remove>
+                                <h:outputLabel for="idCaracteristica" value="Caracteristica: "/>
+                                <p:autoComplete id="idCaracteristica" value="#{tipoProductoFrm.detalle.idCaracteristica}" required="true"
+                                                completeMethod="#{tipoProductoFrm.autocompletarCaracteristica}" var="tipo"
+                                                itemLabel="#{tipo.nombre}" itemValue="#{tipo}"
+                                                converter="caracteristicaConverter" dropdown="true"
+                                                forceSelection="true" placeholder="Seleccione una caracteristica"
+                                                requiredMessage="#{msg['msg.tipoAlmacen']}"/>
                                 <h:outputLabel value=""/>
                             </p:panel>
+                            <br/>
+                            <p:commandButton value="#{msg['btn.guardar']}" icon="pi pi-save"
+                                             action="#{tipoProductoFrm.subBtnGuardar}"
+                                             update=":frmFormulario mensajes"
+                                             process="@form" styleClass="ui-button-success" />
+                            <p:commandButton value="#{msg['btn.eliminar']}" icon="pi pi-trash"
+                                             action="#{tipoProductoFrm.subBtnEliminar}"
+                                             update=":frmFormulario mensajes"
+                                             process="@this" styleClass="ui-button-danger"
+                                             rendered="#{tipoProductoFrm.estadoSubFormulario eq 'Modificar'}"/>
+                            <p:commandButton value="#{msg['btn.cancelar']}" icon="pi pi-times"
+                                             action="#{tipoProductoFrm.subBtnCancelar}"
+                                             update=":frmFormulario mensajes"
+                                             process="@this" styleClass="ui-button-secondary"/>
                         </p:outputPanel>
                     </p:tab>
                 </p:tabView>

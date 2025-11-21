@@ -10,8 +10,10 @@ import org.primefaces.PrimeFaces;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.TreeNode;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Caracteristica;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.TipoProducto;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.TipoProductoCaracteristica;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.CaracteristicaDAO;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.InventarioDefaultDataAccess;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.TipoProductoCaracteristicaDAO;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.TipoProductoDAO;
@@ -60,12 +62,13 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
     }
 
     @PostConstruct
-    public void inicializar(){
+    public void inicializar() {
         this.arbol = getArbol();
         inicializarRegistro();
         detalle = new TipoProductoCaracteristica();
         listaDetalle = new ArrayList<>();
     }
+
     //Reescritura del manejador de selección
     public void oneSelectNodo(NodeSelectEvent event) {
         this.nodoSeleccionado = event.getTreeNode();
@@ -97,6 +100,7 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
     public List<TipoProducto> completarTipoProducto(String consulta) throws Exception {
         return taDao.findLikeConsulta(consulta);
     }
+
     public String armarJerarquia(TipoProducto tipo) {
         if (tipo == null) return "";
         String nombre = tipo.getNombre();
@@ -110,6 +114,31 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
         return nombre;
     }
 
+    //--------------------limpiar subFormulario---------------------------
+    public void resetSubFormulario() {
+        PrimeFaces.current().resetInputs(":panelEdicionC");
+        estadoSubFormulario = ESTADO_CRUD.Nada;
+        detalle = null;
+    }
+    @Override
+    public void btnGuardar() throws IllegalAccessException {
+        resetSubFormulario();
+        listaDetalle = new ArrayList<>();
+        super.btnGuardar();
+    }
+    @Override
+    public void btnCancelar() {
+        resetSubFormulario();
+        listaDetalle = new ArrayList<>();
+        super.btnCancelar();
+    }
+    @Override
+    public void btnEliminar(){
+        resetSubFormulario();
+        listaDetalle = new ArrayList<>();
+        super.btnEliminar();
+    }
+
     //------------------------Elementos de subFormulario ------------------------------
     protected String nombreSubFormulario = "Característica de Tipo de Producto";
     protected TipoProductoCaracteristica detalle;
@@ -117,6 +146,8 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
     protected List<TipoProductoCaracteristica> listaDetalle;
     @Inject
     protected TipoProductoCaracteristicaDAO detalleDao;
+    @Inject
+    protected CaracteristicaDAO caracteristicaDao;
 
     public void cargarCaracteristicas() {
         if (registro != null && registro.getId() != null) {
@@ -125,6 +156,7 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
             this.listaDetalle = new ArrayList<>();
         }
     }
+
     //SubBotones
     public void subSelectionHandler(SelectEvent<TipoProductoCaracteristica> event) {
         this.detalle = event.getObject();
@@ -184,6 +216,19 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto> implements Seriali
         detalle = new TipoProductoCaracteristica();
         String texto = getMessage("btn.cancelar.msg");
         getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, texto, null));
+    }
+
+    public List<Caracteristica> autocompletarCaracteristica(String texto) {
+        List<Integer> idsOmitir = listaDetalle.stream()
+                .filter(d -> d.getIdCaracteristica() != null)
+                .map(d -> d.getIdCaracteristica().getId())
+                .toList();
+
+        try {
+            return caracteristicaDao.findLikeConsulta(texto, idsOmitir);
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
     }
 
     // SubGetters and Setters
