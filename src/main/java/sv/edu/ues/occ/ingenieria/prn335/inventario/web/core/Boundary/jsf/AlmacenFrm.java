@@ -70,4 +70,8 @@ public class AlmacenFrm extends DefaultFrm<Almacen> implements Serializable{
     public String getNombreBean() {return nombreBean;}
 
     public void setNombreBean(String nombreBean) {this.nombreBean = nombreBean;}
+
+    public List<Almacen> findLikeConsulta(String consulta) {
+        return taDao.findLikeConsulta(consulta);
+    }
 }

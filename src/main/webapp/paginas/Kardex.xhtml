@@ -63,6 +63,12 @@
                </h:outputText>
             </p:column>
 
+            <p:column>
+               <h:outputText value="#{r.idAlmacen}">
+                 <f:converter converterId="almacenConverter"/>
+               </h:outputText>
+         </p:column>
+
             <p:column headerText="Precio Actual" style="width:100px">
                <h:outputText value="#{r.precioActual}">
                   <f:convertNumber type="currency" currencySymbol="$" />
@@ -195,6 +201,21 @@
 
 
                      </p:autoComplete>
+
+                     <p:outputLabel for="Almacen" value="Almacen" styleClass="etiqueta"/>
+                     <p:autoComplete id="Almacen"
+                                     value="#{kardexFrm.registro.idAlmacen}"
+                                     completeMethod="#{almacenFrm.findLikeConsulta}"
+                                     var="almacen"
+                                     itemLabel="#{almacen.id}"
+                                     itemValue="#{venta}"
+                                     converter="almacenConverter"
+                                     forceSelection="true"
+                                     style="width: 100%">
+
+
+                     </p:autoComplete>
+
                   </p:panelGrid>
                   <br/>
                   <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">

@@ -8,6 +8,7 @@ import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Almacen;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.TipoAlmacen;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 @Stateless
@@ -24,5 +25,33 @@ public class AlmacenDAO extends InventarioDefaultDataAccess<Almacen> implements 
 
     @Override
     public EntityManager getEntityManager() {return em;}
+
+    public List<Almacen> findLikeConsulta(String consulta) {
+        if (consulta == null || consulta.isBlank()) {
+            return Collections.emptyList();
+        }
+
+        try {
+            // Buscar por ID numérico si es posible
+            try {
+                Integer idConsulta = Integer.parseInt(consulta.trim());
+                Almacen almacen = buscarPorId(idConsulta);
+                return almacen != null ? List.of(almacen) : Collections.emptyList();
+            } catch (NumberFormatException e) {
+                // Buscar por tipo de almacén u otros campos
+                return em.createQuery(
+                                "SELECT a FROM Almacen a WHERE " +
+                                        "LOWER(a.idTipoAlmacen.nombre) LIKE LOWER(:consulta) OR " +
+                                        "LOWER(a.observaciones) LIKE LOWER(:consulta)",
+                                Almacen.class)
+                        .setParameter("consulta", "%" + consulta + "%")
+                        .setMaxResults(20)
+                        .getResultList();
+            }
+        } catch (Exception e) {
+
+            return Collections.emptyList();
+        }
+    }
 
 }
