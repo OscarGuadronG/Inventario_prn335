@@ -84,4 +84,8 @@ public class CompraDetalleFrm extends DefaultFrm<CompraDetalle> implements Seria
     public String getNombreBean() {
         return nombreBean;
     }
+
+    public List<CompraDetalle> autocompleteCompraDetalle(String consulta) {
+        return taDao.findLikeConsulta(consulta);
+    }
 }

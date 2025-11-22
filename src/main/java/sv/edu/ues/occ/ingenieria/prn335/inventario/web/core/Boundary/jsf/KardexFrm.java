@@ -49,6 +49,7 @@ public class KardexFrm extends DefaultFrm<Kardex> implements Serializable {
         kardex.setPrecio(BigDecimal.ZERO);
         kardex.setCantidadActual(BigDecimal.ZERO);
         kardex.setPrecioActual(BigDecimal.ZERO);
+
         return kardex;
     }
 

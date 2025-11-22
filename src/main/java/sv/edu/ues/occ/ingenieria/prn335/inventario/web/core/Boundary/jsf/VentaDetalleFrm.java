@@ -87,5 +87,8 @@ public class VentaDetalleFrm extends DefaultFrm<VentaDetalle> implements Seriali
         return nombreBean;
     }
 
+    public List<VentaDetalle> autocompleteVentaDetalle(String consulta) {
+        return taDao.findLikeConsulta(consulta);
+    }
 
 }

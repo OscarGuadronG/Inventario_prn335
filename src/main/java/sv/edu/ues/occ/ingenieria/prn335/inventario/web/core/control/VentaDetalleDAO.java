@@ -3,10 +3,15 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.VentaDetalle;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,4 +53,33 @@ public class VentaDetalleDAO extends InventarioDefaultDataAccess<VentaDetalle> i
                 .getResultList();
     }
 
-}
+    public List<VentaDetalle> findLikeConsulta(String consulta) {
+        if (consulta == null || consulta.isBlank()) {
+            return Collections.emptyList();
+        }
+
+        try {
+            // Intentar parsear como UUID
+            try {
+                UUID uuidConsulta = UUID.fromString(consulta.trim());
+                return em.createQuery(
+                                "SELECT vd FROM VentaDetalle vd WHERE vd.id = :uuid",
+                                VentaDetalle.class)
+                        .setParameter("uuid", uuidConsulta)
+                        .getResultList();
+            } catch (IllegalArgumentException e) {
+                // Buscar por nombre de producto
+                return em.createQuery(
+                                "SELECT vd FROM VentaDetalle vd WHERE LOWER(vd.idProducto.nombreProducto) LIKE LOWER(:consulta)",
+                                VentaDetalle.class)
+                        .setParameter("consulta", "%" + consulta + "%")
+                        .getResultList();
+            }
+        } catch (Exception e) {
+
+            return Collections.emptyList();
+        }
+    }
+    }
+
+

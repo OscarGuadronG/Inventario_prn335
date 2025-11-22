@@ -22,6 +22,9 @@ public class KardexDetalleFrm extends DefaultFrm<KardexDetalle> implements Seria
     private transient KardexDetalleDAO kardexDetalleDAO;
 
     @Inject
+    private transient KardexFrm kardexFrm;
+
+    @Inject
     FacesContext facesContext;
 
     private Kardex kardexSeleccionado;
@@ -44,8 +47,8 @@ public class KardexDetalleFrm extends DefaultFrm<KardexDetalle> implements Seria
         KardexDetalle detalle = new KardexDetalle();
         detalle.setId(UUID.randomUUID());
         detalle.setActivo(true);
-        if (kardexSeleccionado != null) {
-            detalle.setIdKardex(kardexSeleccionado);
+        if (kardexFrm.getRegistro() != null) {
+            detalle.setIdKardex(kardexFrm.getRegistro());
         }
         return detalle;
     }

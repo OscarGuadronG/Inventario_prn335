@@ -69,15 +69,15 @@
                </h:outputText>
             </p:column>
 
-            <p:column headerText="Fecha" sortBy="#{r.idCompraDetalle}">
+            <p:column headerText="Compra detalle" sortBy="#{r.idCompraDetalle}">
                <h:outputText value="#{r.idCompraDetalle}">
-
+                  <f:converter converterId="compraDetalleConverter" />
                </h:outputText>
             </p:column>
 
-            <p:column headerText="Fecha" sortBy="#{r.idVentaDetalle}">
+            <p:column headerText="Venta Detalle" sortBy="#{r.idVentaDetalle}">
                <h:outputText value="#{r.idVentaDetalle}">
-
+                  <f:converter converterId="ventaDetalleConverter" />
                </h:outputText>
             </p:column>
 
@@ -155,21 +155,46 @@
                                     required="true" requiredMessage="El precio actual es obligatorio"
                                     minValue="0" decimalPlaces="2"
                                     style="width: 100%"/>
+                     <p:outputLabel for="compraDetalle" value="Compra Detalle:" styleClass="etiqueta"/>
+                     <p:autoComplete id="compraDetalle"
+                                     value="#{kardexFrm.registro.idCompraDetalle}"
+                                     completeMethod="#{compraDetalleFrm.autocompleteCompraDetalle}"
+                                     var="compra"
+                                     itemLabel="#{compra.id} - #{compra.producto.nombreProducto} - Cant: #{compra.cantidad}"
+                                     itemValue="#{compra}"
+                                     converter="compraDetalleConverter"
+                                     forceSelection="true"
+                                     style="width: 100%">
 
-                     <p:outputLabel for="cd" value="ID compra detalle" styleClass="etiqueta required"/>
-                     <p:inputText id="cd" value="#{kardexFrm.registro.idCompraDetalle.id}"
-                                  required="true" requiredMessage="La fecha es obligatoria"
-                                  styleClass="campo-input">
+                        <p:ajax event="itemSelect" update="@form"/>
 
-                     </p:inputText>
+                        <f:facet name="itemtip">
+                           <h:panelGrid columns="2" style="width: 100%">
+                              <h:outputText value="ID:" style="font-weight: bold"/>
+                              <h:outputText value="#{compra.id}"/>
+                              <h:outputText value="Producto:" style="font-weight: bold"/>
+                              <h:outputText value="#{compra.producto.nombreProducto}"/>
+                              <h:outputText value="Cantidad:" style="font-weight: bold"/>
+                              <h:outputText value="#{compra.cantidad}"/>
+                              <h:outputText value="Precio:" style="font-weight: bold"/>
+                              <h:outputText value="#{compra.precio}"/>
+                           </h:panelGrid>
+                        </f:facet>
+                     </p:autoComplete>
 
-                     <p:outputLabel for="vd" value="ID Venta detalle" styleClass="etiqueta required"/>
-                     <p:inputText id="vd" value="#{kardexFrm.registro.idVentaDetalle.id}"
-                                  required="true" requiredMessage="La fecha es obligatoria"
-                                  styleClass="campo-input">
+                     <p:outputLabel for="ventaDetalle" value="Venta Detalle:" styleClass="etiqueta"/>
+                     <p:autoComplete id="ventaDetalle"
+                                     value="#{kardexFrm.registro.idVentaDetalle}"
+                                     completeMethod="#{ventaDetalleFrm.autocompleteVentaDetalle}"
+                                     var="venta"
+                                     itemLabel="#{venta.id} - #{venta.idProducto.nombreProducto} - Cant: #{venta.cantidad}"
+                                     itemValue="#{venta}"
+                                     converter="ventaDetalleConverter"
+                                     forceSelection="true"
+                                     style="width: 100%">
 
-                     </p:inputText>
 
+                     </p:autoComplete>
                   </p:panelGrid>
                   <br/>
                   <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">
