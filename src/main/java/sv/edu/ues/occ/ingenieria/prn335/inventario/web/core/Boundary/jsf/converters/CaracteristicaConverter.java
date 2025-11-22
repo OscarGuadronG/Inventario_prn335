@@ -22,7 +22,6 @@ public class CaracteristicaConverter implements Converter<Caracteristica> {
     public Caracteristica getAsObject(FacesContext ctx, UIComponent cmp, String value) {
         if (value == null || value.isBlank()) return null;
         try {
-            System.out.println("encontrado: " + caracteristicaDAO.buscarPorId(Integer.valueOf(value)));
             return caracteristicaDAO.buscarPorId(Integer.valueOf(value));
 
         } catch (IllegalAccessException e) {

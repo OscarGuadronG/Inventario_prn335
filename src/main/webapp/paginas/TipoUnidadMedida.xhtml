@@ -23,7 +23,8 @@
             <!-- Tabla-->
             <p:dataTable id="tblDato" value="#{tipoUnidadMedidaFrm.modelo}" var="ta" lazy="true"
                          paginator="true" rows="10" selection="#{tipoUnidadMedidaFrm.registro}"
-                         selectionMode="single" rowKey="#{ta.id}" selectionListener="#{tipoUnidadMedidaFrm.selectionHandler}"
+                         selectionMode="single" rowKey="#{ta.id}"
+                         selectionListener="#{tipoUnidadMedidaFrm.selectionHandler}"
                          styleClass="ui-datatable">
                 <!-- El unico ajax-->
                 <p:ajax event="rowSelect" update=":frmTabla :frmFormulario mensajes"
@@ -54,95 +55,108 @@
             <p:panel header="Tipo de Unidad" styleClass="panel">
                 <p:tabView>
 
-            <p:tab title="Generalidades">
-                <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
-                    <!-- Campos del formulario -->
-                    <h:outputLabel value=" "/>
-                    <h:outputLabel for="nombre" value="#{msg['lbl.nombre']}:" styleClass="etiqueta required"/>
+                    <p:tab title="Generalidades">
+                        <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
+                            <!-- Campos del formulario -->
+                            <h:outputLabel value=" "/>
+                            <h:outputLabel for="nombre" value="#{msg['lbl.nombre']}:" styleClass="etiqueta required"/>
 
-                    <p:inputText id="nombre" value="#{tipoUnidadMedidaFrm.registro.nombre}" required="true"
-                                 requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input"/>
-                    <h:outputLabel for="activo" value="#{msg['lbl.estado']}:"/>
-                    <p:selectBooleanCheckbox id="activo" value="#{tipoUnidadMedidaFrm.registro.activo}"
-                                             styleClass="campo-checkbox"/>
-                    <h:outputLabel for="UB" value="Unidad Base"/>
-                    <p:inputTextarea id="UB" value="#{tipoUnidadMedidaFrm.registro.unidadBase}"
-                                     styleClass="campo-textarea" rows="3"/>
-                    <h:outputLabel for="Comentarios" value="Unidad Base"/>
-                    <p:inputTextarea id="Comentarios" value="#{tipoUnidadMedidaFrm.registro.comentarios}"
-                                     styleClass="campo-textarea" rows="3"/>
-
-                </p:panelGrid>
-                <br/>
-                <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">
-                    <ui:include src="componentes/Botones-Top.xhtml">
-                        <ui:param name="boton" value="ediciones"/>
-                        <ui:param name="bean" value="#{tipoUnidadMedidaFrm}"/>
-                    </ui:include>
-                </h:panelGroup>
-            </p:tab>
-                    <p:tab title="Unidad de Medidas" id="tab2" disabled="#{tipoUnidadMedidaFrm.estadoCrud eq 'Crear'}">
-            <p:dataTable id="tblUnidades" value="#{unidadMedidaFrm.buscarPorTipo(tipoUnidadMedidaFrm.registro.id)}" var="ta" lazy="true"
-                         paginator="true" rows="10" selection="#{unidadMedidaFrm.registro}"
-                         rendered="#{unidadMedidaFrm.estadoCrud eq 'Nada'}"
-                         selectionMode="single" rowKey="#{ta.id}" selectionListener="#{unidadMedidaFrm.selectionHandler}"
-                         styleClass="ui-datatable">
-
-                <!-- Definición de columnas -->
-                <p:column headerText="#{msg['lbl.id']}">
-                    <h:outputText value="#{ta.id}"/>
-                </p:column>
-                <p:column headerText="equivalencia">
-                    <h:outputText value="#{ta.equivalencia}"/>
-                </p:column>
-                <p:column headerText="#{msg['lbl.estado']}">
-                    <h:outputText value="#{ta.activo?msg['lbl.activo']:msg['lbl.inactivo']}"/>
-                </p:column>
-
-                <p:column headerText="Expresion">
-                    <h:outputText value="#{ta.expresionRegular}"/>
-                </p:column>
-                <p:column headerText="#{msg['lbl.comentarios']}">
-                    <h:outputText value="#{ta.comentarios}"/>
-                </p:column>
-
-            </p:dataTable>
-<p:commandButton value="Nueva Unidad de Medida"
-                 action="#{unidadMedidaFrm.btnNuevo}"
-                 update="tab2"
-                 process="@this"/>
-
-                        <p:outputPanel id="panelEdicionU" >
-                        <p:panel header="#{msg['lbl.formulario']} " styleClass="panel" rendered="#{unidadMedidaFrm.estadoCrud ne 'Nada'}">
-
-                            <h:outputLabel value="equivalencias "/>
-                            <h:outputLabel for="equivalencias" value="#{msg['lbl.nombre']}:" styleClass="etiqueta required"/>
-
-                            <p:inputText id="equivalencias" value="#{unidadMedidaFrm.registro.equivalencia}" required="true"
-                                         />
-                            <h:outputLabel for="activoU" value="#{msg['lbl.estado']}:"/>
-                            <p:selectBooleanCheckbox id="activoU" value="#{unidadMedidaFrm.registro.activo}"
+                            <p:inputText id="nombre" value="#{tipoUnidadMedidaFrm.registro.nombre}" required="true"
+                                         requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input"/>
+                            <h:outputLabel for="activo" value="#{msg['lbl.estado']}:"/>
+                            <p:selectBooleanCheckbox id="activo" value="#{tipoUnidadMedidaFrm.registro.activo}"
                                                      styleClass="campo-checkbox"/>
-                            <h:outputLabel for="expresionRegular" value="Expresion Regular"/>
-                            <p:inputTextarea id="expresionRegular" value="#{unidadMedidaFrm.registro.expresionRegular}"
+                            <h:outputLabel for="UB" value="Unidad Base"/>
+                            <p:inputTextarea id="UB" value="#{tipoUnidadMedidaFrm.registro.unidadBase}"
                                              styleClass="campo-textarea" rows="3"/>
-                            <h:outputLabel for="ComentariosU" value="Comentarios"/>
-                            <p:inputTextarea id="ComentariosU" value="#{unidadMedidaFrm.registro.comentarios}"
+                            <h:outputLabel for="Comentarios" value="Comentarios"/>
+                            <p:inputTextarea id="Comentarios" value="#{tipoUnidadMedidaFrm.registro.comentarios}"
                                              styleClass="campo-textarea" rows="3"/>
+
+                        </p:panelGrid>
+                        <br/>
+                        <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">
                             <ui:include src="componentes/Botones-Top.xhtml">
                                 <ui:param name="boton" value="ediciones"/>
-                                <ui:param name="bean" value="#{unidadMedidaFrm}"/>
+                                <ui:param name="bean" value="#{tipoUnidadMedidaFrm}"/>
                             </ui:include>
-                        </p:panel>
-                        </p:outputPanel>
-
+                        </h:panelGroup>
                     </p:tab>
+                    <p:tab title="Unidad de Medidas" id="tab2" disabled="#{tipoUnidadMedidaFrm.estadoCrud eq 'Crear'}">
+                        <p:outputPanel id="PanelTablaC" rendered="#{tipoUnidadMedidaFrm.estadoSubFormulario eq 'Nada'}">
+                            <p:commandButton value="#{msg['btn.nuevo']}"
+                                             icon="pi pi-plus"
+                                             action="#{tipoUnidadMedidaFrm.SubBtnNuevo}"
+                                             update="tab2 mensajes"
+                                             process="@this"
+                                             styleClass="ui-button"/>
+                            <p:dataTable id="tblUnidades"
+                                         value="#{tipoUnidadMedidaFrm.listaDetalle}" var="ta"
+                                         selection="#{tipoUnidadMedidaFrm.detalle}"
+                                         selectionMode="single" rowKey="#{ta.id}"
+                                         emptyMessage="No hay Unidades de Medida registradas para este tipo de Unidad"
+                                         styleClass="ui-datatable">
+                                <!-- El unico ajax-->
+                                <p:ajax event="rowSelect" update="tab2 mensajes"
+                                        listener="#{tipoUnidadMedidaFrm.subSelectionHandler}"/>
+                                <!-- Definición de columnas -->
+                                <p:column headerText="#{msg['lbl.id']}">
+                                    <h:outputText value="#{ta.id}"/>
+                                </p:column>
+                                <p:column headerText="equivalencia">
+                                    <h:outputText value="#{ta.equivalencia}"/>
+                                </p:column>
+                                <p:column headerText="#{msg['lbl.estado']}">
+                                    <h:outputText value="#{ta.activo?msg['lbl.activo']:msg['lbl.inactivo']}"/>
+                                </p:column>
 
+                                <p:column headerText="Expresion">
+                                    <h:outputText value="#{ta.expresionRegular}"/>
+                                </p:column>
+                                <p:column headerText="#{msg['lbl.comentarios']}">
+                                    <h:outputText value="#{ta.comentarios}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+                        <p:outputPanel id="panelEdicionC" rendered="#{tipoUnidadMedidaFrm.estadoSubFormulario ne 'Nada'}">
+                            <p:panel header="#{msg['lbl.formulario']} " styleClass="panel">
+                                <h:outputLabel for="equivalencia" value="#{msg['lbl.equivalencia']}:"
+                                               styleClass="etiqueta required"/>
+                                <p:inputNumber id="equivalencia"
+                                               value="#{tipoUnidadMedidaFrm.detalle.equivalencia}"
+                                               decimalPlaces="2"
+                                               thousandSeparator=""
+                                               decimalSeparator="."
+                                               required="true"
+                                               requiredMessage="#{msg['msg.equivalencia']}" />
+                                <h:outputLabel for="activoU" value="#{msg['lbl.estado']}:"/>
+                                <p:selectBooleanCheckbox id="activoU" value="#{tipoUnidadMedidaFrm.detalle.activo}"
+                                                         styleClass="campo-checkbox"/>
+                                <h:outputLabel for="expresionRegular" value="Expresion Regular"/>
+                                <p:inputText id="expresionRegular" value="#{tipoUnidadMedidaFrm.detalle.expresionRegular}" styleClass="campo-input"/>
+                                <h:outputLabel for="ComentariosU" value="Comentarios"/>
+                                <p:inputTextarea id="ComentariosU" value="#{tipoUnidadMedidaFrm.detalle.comentarios}"
+                                                 styleClass="campo-textarea" rows="2"/>
+                                <br/>
+                                <p:commandButton value="#{msg['btn.guardar']}" icon="pi pi-save"
+                                                 action="#{tipoUnidadMedidaFrm.subBtnGuardar}"
+                                                 update=":frmFormulario mensajes"
+                                                 process="@form" styleClass="ui-button-success" />
+                                <p:commandButton value="#{msg['btn.eliminar']}" icon="pi pi-trash"
+                                                 action="#{tipoUnidadMedidaFrm.subBtnEliminar}"
+                                                 update=":frmFormulario mensajes"
+                                                 process="@this" styleClass="ui-button-danger"
+                                                 rendered="#{tipoUnidadMedidaFrm.estadoSubFormulario eq 'Modificar'}"/>
+                                <p:commandButton value="#{msg['btn.cancelar']}" icon="pi pi-times"
+                                                 action="#{tipoUnidadMedidaFrm.subBtnCancelar}"
+                                                 update=":frmFormulario mensajes"
+                                                 process="@this" styleClass="ui-button-secondary"/>
+                            </p:panel>
+                        </p:outputPanel>
+                    </p:tab>
                 </p:tabView>
             </p:panel>
         </p:outputPanel>
     </ui:define>
 </ui:composition>
-
 </html>
-

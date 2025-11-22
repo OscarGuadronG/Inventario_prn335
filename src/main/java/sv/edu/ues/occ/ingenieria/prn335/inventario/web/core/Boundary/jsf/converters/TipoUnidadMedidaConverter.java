@@ -20,7 +20,6 @@ public class TipoUnidadMedidaConverter implements Converter<TipoUnidadMedida> {
     public TipoUnidadMedida getAsObject(FacesContext ctx, UIComponent cmp, String value) {
         if (value == null || value.isBlank()) return null;
         try {
-            System.out.println("encontrado: " + tipoUnidadMedidaDAO.buscarPorId(Integer.valueOf(value)));
             return tipoUnidadMedidaDAO.buscarPorId(Integer.valueOf(value));
 
         } catch (IllegalAccessException e) {

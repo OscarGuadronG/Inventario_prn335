@@ -61,9 +61,6 @@ public class CaracteristicaFrm extends DefaultFrm<Caracteristica> implements Ser
     public List<TipoUnidadMedida> completarTipounidadMedida(String consulta) throws Exception {
         return tipoUnidadMedidaDao.findLikeConsulta(consulta);
     }
-    public List<Caracteristica> getListaCompleta() {
-        return taDao.findLikeConsulta();
-    }
 
     public void setNombreBean(String nombreBean) {
         this.nombreBean = nombreBean;
