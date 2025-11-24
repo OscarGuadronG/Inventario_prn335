@@ -59,7 +59,7 @@ public class VentaDetalleDAO extends InventarioDefaultDataAccess<VentaDetalle> i
         }
 
         try {
-            // Intentar parsear como UUID
+
             try {
                 UUID uuidConsulta = UUID.fromString(consulta.trim());
                 return em.createQuery(
@@ -68,7 +68,7 @@ public class VentaDetalleDAO extends InventarioDefaultDataAccess<VentaDetalle> i
                         .setParameter("uuid", uuidConsulta)
                         .getResultList();
             } catch (IllegalArgumentException e) {
-                // Buscar por nombre de producto
+
                 return em.createQuery(
                                 "SELECT vd FROM VentaDetalle vd WHERE LOWER(vd.idProducto.nombreProducto) LIKE LOWER(:consulta)",
                                 VentaDetalle.class)

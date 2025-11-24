@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="componentes/Template.xhtml">
+    <ui:define name="tituloFormulario">
+        #{msg['sb.RecepcionCompra']}
+    </ui:define>
+    <ui:define name="PanelTabla">
+        <p:outputPanel id="panelTabla" rendered="#{recepcionCompraFrm.estadoCrud eq 'Nada'}">
+            <h:panelGroup id="tblBotones">
+                <ui:include src="componentes/Botones-Top.xhtml">
+                    <ui:param name="boton" value="nuevo"/>
+                    <ui:param name="bean" value="#{recepcionCompraFrm}"/>
+                </ui:include>
+            </h:panelGroup>
+            <br/>
+
+            <h:outputText value="#{recepcionCompraFrm.numeroRandom}"/>
+
+            <p:remoteCommand name="actualizar" update="tblDato" actionListener="#{recepcionCompraFrm.actualizarTabla}"/>
+
+            <!-- Tabla Recepción Compra-->
+            <p:dataTable id="tblDato" value="#{recepcionCompraFrm.modelo}" var="r" lazy="true"
+                         rendered="#{recepcionCompraFrm.estadoCrud eq 'Nada'}"
+                         paginator="true" rows="10" selection="#{recepcionCompraFrm.registro}"
+                         selectionMode="single" rowKey="#{r.id}" selectionListener="#{recepcionCompraFrm.selectionHandler}"
+                         styleClass="ui-datatable">
+
+                <p:ajax event="rowSelect"
+                        listener="#{recepcionCompraFrm.selectionHandler}"
+                        update=":frmTabla :frmFormulario mensajes"/>
+
+                <p:column headerText="ID Compra" style="width:320px" sortBy="#{r.id}">
+                    <h:outputText value="#{r.id}" />
+                </p:column>
+
+                <p:column headerText="Proveedor" >
+                    <h:outputText value="#{r.proveedor != null ? r.proveedor.nombre : 'N/A'}" />
+                </p:column>
+
+                <p:column headerText="Razón Social" >
+                    <h:outputText value="#{r.proveedor != null ? r.proveedor.razonSocial : 'N/A'}" />
+                </p:column>
+
+                <p:column headerText="Fecha">
+                    <h:outputText value="#{r.fecha}">
+                        <f:converter converterId="offsetDateTimeConverter" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Estado" >
+                    <h:outputText value="#{r.estado}" />
+                </p:column>
+
+            </p:dataTable>
+        </p:outputPanel>
+    </ui:define>
+    <ui:define name="PanelEdicion">
+        <p:outputPanel id="panelEdicion" rendered="#{recepcionCompraFrm.estadoCrud ne 'Nada'}">
+            <p:panel header="#{msg['lbl.formulario']} #{msg['sb.RecepcionCompra']}" styleClass="panel">
+                <p:tabView>
+                    <p:tab title="Generalidades">
+                        <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
+                            <h:outputLabel value=" "/>
+                            <p:outputLabel for="fechaCreacion" value="Fecha Creación:" />
+                            <p:inputText id="fechaCreacion"
+                                         value="#{recepcionCompraFrm.registro.fecha}"
+                                         disabled="true"
+                                         styleClass="campo-input"
+                                         converter="offsetDateTimeConverter1"/>
+
+                            <h:outputLabel for="compra" value="ID Compra: " styleClass="etiqueta required" disabled="true" rendered="#{recepcionCompraFrm.estadoCrud ne 'Crear'}"/>
+                            <p:inputText id="compra" value="#{recepcionCompraFrm.registro.id}"  required="true" disabled="true" rendered="#{recepcionCompraFrm.estadoCrud ne 'Crear'}"
+                                         requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input" />
+
+                            <h:outputLabel for="proveedor" value="ID Proveedor: " styleClass="etiqueta required" disabled="true" rendered="#{recepcionCompraFrm.estadoCrud ne 'Crear'}"/>
+                            <p:inputText id="proveedor" value="#{recepcionCompraFrm.registro.proveedor.id}" required="true" disabled="true" rendered="#{recepcionCompraFrm.estadoCrud ne 'Crear'}"
+                                         requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input"/>
+
+                            <p:outputLabel for="Proveedores" value="Proveedor:" />
+                            <p:selectOneMenu id="Proveedores"
+                                             value="#{recepcionCompraFrm.registro.proveedor}"
+                                             converter="proveedorConverter"
+                                             style="width: 100%">
+                                <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" />
+                                <f:selectItems value="#{proveedorFrm.findActivos()}"
+                                               var="prov"
+                                               itemLabel="#{prov.nombre}"
+                                               itemValue="#{prov}"  />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel for="estado" value="Estado:" />
+                            <p:selectOneMenu id="estado"
+                                             value="#{recepcionCompraFrm.registro.estado}"
+                                             style="width: 100%"
+                                             required="true"
+                                             requiredMessage="El estado es obligatorio">
+                                <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" />
+                                <f:selectItem itemLabel="Pagada" itemValue="PAGADA" />
+                                <f:selectItem itemLabel="Cancelado" itemValue="CANCELADO" />
+                            </p:selectOneMenu>
+
+                            <h:outputLabel for="observaciones" value="Observaciones"/>
+                            <p:inputTextarea id="observaciones" value="#{recepcionCompraFrm.registro.observaciones}"
+                                             styleClass="campo-textarea" rows="3"/>
+
+                        </p:panelGrid>
+                        <br/>
+                        <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">
+                            <ui:include src="componentes/Botones-Top.xhtml">
+                                <ui:param name="boton" value="ediciones"/>
+                                <ui:param name="bean" value="#{recepcionCompraFrm}"/>
+                            </ui:include>
+                        </h:panelGroup>
+                    </p:tab>
+                </p:tabView>
+            </p:panel>
+        </p:outputPanel>
+        <script>
+
+            var ws = new WebSocket("ws://localhost:9080/InventarioWebApp-1.0-SNAPSHOT/compraRecepcion");
+            ws.onmessage = function(event) {
+                let mensaje = event.data;
+                console.log("Mensaje WebSocket recibido:", mensaje);
+            };
+            ws.onopen = function(e) {
+                console.log("Conexión WebSocket establecida con el servidor de compras");
+            };
+            ws.onerror = function(e) {
+                console.log("Error en WebSocket:", e);
+            };
+        </script>
+    </ui:define>
+</ui:composition>
+</html>

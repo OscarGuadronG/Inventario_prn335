@@ -75,9 +75,7 @@
                      <p:inputText id="venta" value="#{ventaFrm.registro.id}"  required="true" disabled="true" rendered="#{ventaFrm.estadoCrud ne 'Crear'}"
                                   requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input" />
 
-                     <h:outputLabel for="cliente" value="ID Cliente: " styleClass="etiqueta required" disabled="true" rendered="#{ventaFrm.estadoCrud ne 'Crear'}"/>
-                     <p:inputText id="cliente" value="#{ventaFrm.registro.idCliente.id}" required="true" disabled="true" rendered="#{ventaFrm.estadoCrud ne 'Crear'}"
-                                  requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input"/>
+
 
 
                      <p:outputLabel for="Clientes" value="Cliente:" />
@@ -101,7 +99,7 @@
                         <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" />
                         <f:selectItem itemLabel="Activo" itemValue="ACTIVO" />
                         <f:selectItem itemLabel="Pendiente" itemValue="PENDIENTE" />
-                        <f:selectItem itemLabel="Completado" itemValue="COMPLETADO" />
+                        <f:selectItem itemLabel="Cerrada" itemValue="CERRADA" />
                         <f:selectItem itemLabel="Cancelado" itemValue="CANCELADO" />
                      </p:selectOneMenu>
 

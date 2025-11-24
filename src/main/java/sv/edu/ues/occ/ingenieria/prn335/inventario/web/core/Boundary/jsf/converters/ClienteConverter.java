@@ -20,11 +20,16 @@ public class ClienteConverter implements Converter<Cliente> {
 
     @Override
     public Cliente getAsObject(FacesContext ctx, UIComponent cmp, String value) {
-        if (value == null || value.isBlank()) return null;
+        System.out.println("instanciado");
+        if (value == null || value.isBlank()) {
+            System.out.println("VACIO");
+            return null;
+        }
         try {
             return clienteDAO.buscarPorId(UUID.fromString(value));
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
+
         }
     }
 

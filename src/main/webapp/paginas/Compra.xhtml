@@ -100,7 +100,7 @@
                                 <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" />
                                 <f:selectItem itemLabel="Activo" itemValue="ACTIVO" />
                                 <f:selectItem itemLabel="Pendiente" itemValue="PENDIENTE" />
-                                <f:selectItem itemLabel="Completado" itemValue="COMPLETADO" />
+                                <f:selectItem itemLabel="Pagada" itemValue="PAGADA" />
                                 <f:selectItem itemLabel="Cancelado" itemValue="CANCELADO" />
                             </p:selectOneMenu>
 
@@ -115,6 +115,14 @@
                                 <ui:param name="boton" value="ediciones"/>
                                 <ui:param name="bean" value="#{compraFrm}"/>
                             </ui:include>
+                            <p:commandButton value="Cerrar Compra"
+                                             icon="pi pi-bell"
+                                             action="#{compraFrm.notificarCambioCompra}"
+                                             update=":frmFormulario :frmTabla mensajes"
+                                             styleClass="p-button p-button-warning"
+                                             rendered="#{compraFrm.estadoCrud ne 'Nada' and compraFrm.registro.id != null and  compraFrm.registro.estado!='PAGADA'}">
+
+                            </p:commandButton>
                         </h:panelGroup>
                     </p:tab>
 

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="componentes/Template.xhtml">
+    <ui:define name="tituloFormulario">
+        #{msg['sb.DespachoVenta']}
+    </ui:define>
+    <ui:define name="PanelTabla">
+        <p:outputPanel id="panelTabla" rendered="#{despachoVentaFrm.estadoCrud eq 'Nada'}">
+            <h:panelGroup id="tblBotones">
+                <ui:include src="componentes/Botones-Top.xhtml">
+                    <ui:param name="boton" value="nuevo"/>
+                    <ui:param name="bean" value="#{despachoVentaFrm}"/>
+                </ui:include>
+            </h:panelGroup>
+            <br/>
+
+            <h:outputText value="#{despachoVentaFrm.numeroRandom}"/>
+
+            <p:remoteCommand name="actualizar" update="tblDato" actionListener="#{despachoVentaFrm.actualizarTabla}"/>
+
+            <!-- Tabla Despacho Venta-->
+            <p:dataTable id="tblDato" value="#{despachoVentaFrm.modelo}" var="r" lazy="true"
+                         rendered="#{despachoVentaFrm.estadoCrud eq 'Nada'}"
+                         paginator="true" rows="10" selection="#{despachoVentaFrm.registro}"
+                         selectionMode="single" rowKey="#{r.id}" selectionListener="#{despachoVentaFrm.selectionHandler}"
+                         styleClass="ui-datatable">
+
+                <p:ajax event="rowSelect"
+                        listener="#{despachoVentaFrm.selectionHandler}"
+                        update=":frmTabla :frmFormulario mensajes"/>
+
+                <p:column headerText="ID Venta" style="width:320px" sortBy="#{r.id}">
+                    <h:outputText value="#{r.id}" />
+                </p:column>
+
+                <p:column headerText="Cliente" >
+                    <h:outputText value="#{r.idCliente != null ? r.idCliente.nombre : 'N/A'}" />
+                </p:column>
+
+                <p:column headerText="Fecha">
+                    <h:outputText value="#{r.fecha}">
+                        <f:converter converterId="offsetDateTimeConverter" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Estado" >
+                    <h:outputText value="#{r.estado}" />
+                </p:column>
+
+            </p:dataTable>
+        </p:outputPanel>
+    </ui:define>
+    <ui:define name="PanelEdicion">
+        <p:outputPanel id="panelEdicion" rendered="#{despachoVentaFrm.estadoCrud ne 'Nada'}">
+            <p:panel header="#{msg['lbl.formulario']} #{msg['sb.DespachoVenta']}" styleClass="panel">
+                <p:tabView>
+                    <p:tab title="Generalidades">
+                        <p:panelGrid columns="2" columnClasses="etiqueta, campo" styleClass="formulario-grid">
+                            <h:outputLabel value=" "/>
+                            <p:outputLabel for="fechaCreacion" value="Fecha Creación:" />
+                            <p:inputText id="fechaCreacion"
+                                         value="#{despachoVentaFrm.registro.fecha}"
+                                         disabled="true"
+                                         styleClass="campo-input"
+                                         converter="offsetDateTimeConverter1"/>
+
+                            <h:outputLabel for="venta" value="ID Venta: " styleClass="etiqueta required" disabled="true" rendered="#{despachoVentaFrm.estadoCrud ne 'Crear'}"/>
+                            <p:inputText id="venta" value="#{despachoVentaFrm.registro.id}"  required="true" disabled="true" rendered="#{despachoVentaFrm.estadoCrud ne 'Crear'}"
+                                         requiredMessage="#{msg['msg.nombre']}" styleClass="campo-input" />
+
+                            <p:outputLabel for="Clientes" value="Cliente:" />
+                            <p:selectOneMenu id="Clientes"
+                                             value="#{despachoVentaFrm.registro.idCliente}"
+                                             converter="clienteConverter"
+                                             style="width: 100%">
+                                <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" />
+                                <f:selectItems value="#{clienteFrm.findActivos()}"
+                                               var="cli"
+                                               itemLabel="#{cli.nombre}"
+                                               itemValue="#{cli}"  />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel for="estado" value="Estado:" />
+                            <p:selectOneMenu id="estado"
+                                             value="#{despachoVentaFrm.registro.estado}"
+                                             style="width: 100%"
+                                             required="true"
+                                             requiredMessage="El estado es obligatorio">
+                                <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" />
+                                <f:selectItem itemLabel="Cerrada" itemValue="CERRADA" />
+                                <f:selectItem itemLabel="Cancelado" itemValue="CANCELADO" />
+                            </p:selectOneMenu>
+
+                            <h:outputLabel for="observaciones" value="Observaciones"/>
+                            <p:inputTextarea id="observaciones" value="#{despachoVentaFrm.registro.observaciones}"
+                                             styleClass="campo-textarea" rows="3"/>
+
+                        </p:panelGrid>
+                        <br/>
+                        <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">
+                            <ui:include src="componentes/Botones-Top.xhtml">
+                                <ui:param name="boton" value="ediciones"/>
+                                <ui:param name="bean" value="#{despachoVentaFrm}"/>
+                            </ui:include>
+                        </h:panelGroup>
+                    </p:tab>
+                </p:tabView>
+            </p:panel>
+        </p:outputPanel>
+        <script>
+            var ws = new WebSocket("ws://localhost:9080/InventarioWebApp-1.0-SNAPSHOT/ventaRecepcion");
+            ws.onmessage = function(event) {
+                let mensaje = event.data;
+                console.log("Mensaje WebSocket recibido:", mensaje);
+            };
+            ws.onopen = function(e) {
+                console.log("Conexión WebSocket establecida con el servidor de ventas");
+            };
+            ws.onerror = function(e) {
+                console.log("Error en WebSocket:", e);
+            };
+        </script>
+    </ui:define>
+</ui:composition>
+</html>

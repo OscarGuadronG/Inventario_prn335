@@ -5,9 +5,11 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Boundary.ws.VentaEndpoint;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Cliente;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Venta;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.InventarioDefaultDataAccess;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.NotificadorVenta;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.VentaDAO;
 
 import java.io.Serializable;
@@ -24,6 +26,12 @@ public class VentaFrm extends DefaultFrm<Venta> implements Serializable{
 
     @Inject
     FacesContext facesContext;
+
+    @Inject
+    private transient VentaEndpoint ventaEndpoint;
+
+    @Inject
+    private transient NotificadorVenta notificadorVenta;
 
     protected String nombreBean = "Venta";
 
@@ -43,7 +51,6 @@ public class VentaFrm extends DefaultFrm<Venta> implements Serializable{
         Venta venta = new Venta();
         venta.setId(UUID.randomUUID());
         venta.setFecha(OffsetDateTime.now());
-
         return venta;
     }
 
@@ -66,5 +73,15 @@ public class VentaFrm extends DefaultFrm<Venta> implements Serializable{
         return nombreBean;
     }
 
+    public void notificarCambioVenta() throws IllegalAccessException {
+        if (this.registro != null && this.registro.getId() != null) {
+            this.registro.setEstado("CERRADA");
 
+            if (this.registro.getId() != null) {
+                ventaEndpoint.notificarCierreVenta(this.registro.getId().toString());
+                notificadorVenta.notificarCambioVenta("Venta Cerrada: " + this.registro.getId());
+            }
+        }
+        super.btnGuardar();
+    }
 }

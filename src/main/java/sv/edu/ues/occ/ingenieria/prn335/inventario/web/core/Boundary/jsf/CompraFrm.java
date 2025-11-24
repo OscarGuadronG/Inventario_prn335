@@ -8,8 +8,10 @@ import jakarta.inject.Named;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Compra;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.CompraDAO;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.InventarioDefaultDataAccess;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.NotificadorCompra;
 
 
+import java.awt.event.ActionEvent;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -22,6 +24,10 @@ public class CompraFrm extends DefaultFrm<Compra> implements Serializable{
 
     @Inject
     private transient CompraDAO taDao;
+    @Inject
+    private transient NotificadorCompra notificadorCompra;
+    @Inject
+    private transient sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Boundary.ws.CompraEndpoint compraEndpoint;
 
     @Inject
     FacesContext facesContext;
@@ -63,6 +69,20 @@ public class CompraFrm extends DefaultFrm<Compra> implements Serializable{
     public String getNombreBean() {
         return nombreBean;
     }
+
+        public void notificarCambioCompra() throws IllegalAccessException {
+            if (this.registro != null && this.registro.getId() != null) {
+                this.registro.setEstado("PAGADA");
+
+                if (this.registro.getId() != null) {
+
+                    compraEndpoint.notificarCierreCompra(this.registro.getId().toString());
+
+                    notificadorCompra.notificarCambioCompra("Compra Pagada: " + this.registro.getId());
+                }
+            }
+            super.btnGuardar();
+        }
 
 
 }
