@@ -18,6 +18,6 @@
         <param-value>Development</param-value>
     </context-param>
     <welcome-file-list>
-        <welcome-file>paginas/TipoAlmacen.xhtml</welcome-file>
+        <welcome-file>paginas/Inicio.xhtml</welcome-file>
     </welcome-file-list>
 </web-app>
