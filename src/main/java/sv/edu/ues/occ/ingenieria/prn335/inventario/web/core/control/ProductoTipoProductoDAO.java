@@ -3,6 +3,9 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.ProductoTipoProducto;
 
 import java.io.Serializable;
@@ -26,11 +29,11 @@ public class ProductoTipoProductoDAO extends InventarioDefaultDataAccess<Product
             throw new IllegalArgumentException("ID Producto no puede ser nulo");
         }
 
-        return em.createQuery(
-                        "SELECT ptp FROM ProductoTipoProducto ptp WHERE ptp.idProducto.id = :idProducto",
-                        ProductoTipoProducto.class)
-                .setParameter("idProducto", idProducto)
-                .getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<ProductoTipoProducto> cq = cb.createQuery(ProductoTipoProducto.class);
+        Root<ProductoTipoProducto> root = cq.from(ProductoTipoProducto.class);
+        cq.select(root).where(cb.equal(root.get("idProducto").get("id"), idProducto));
+        return em.createQuery(cq).getResultList();
     }
 
 }

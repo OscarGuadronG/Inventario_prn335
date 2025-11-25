@@ -47,7 +47,6 @@ public class AlmacenFrm extends DefaultFrm<Almacen> implements Serializable{
         try{
             return taDao.buscarPorId(id);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

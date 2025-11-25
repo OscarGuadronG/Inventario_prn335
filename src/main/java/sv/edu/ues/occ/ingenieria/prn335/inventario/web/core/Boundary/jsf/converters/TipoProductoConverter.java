@@ -23,7 +23,6 @@ public class TipoProductoConverter implements Converter<TipoProducto> {
         if (value == null || value.isBlank()) {
             return null;
         }
-
         try {
             long id = Long.parseLong(value);
             return tipoProductoDAO.buscarPorId(id);
