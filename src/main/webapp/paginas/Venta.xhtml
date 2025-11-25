@@ -69,7 +69,7 @@
                                   value="#{ventaFrm.registro.fecha}"
                                   disabled="true"
                                   styleClass="campo-input"
-                                  converter="offsetDateTimeConverter1"/>
+                                  converter="offsetDateTimeConverter"/>
 
                      <h:outputLabel for="venta" value="ID venta: " styleClass="etiqueta required" disabled="true" rendered="#{ventaFrm.estadoCrud ne 'Crear'}"/>
                      <p:inputText id="venta" value="#{ventaFrm.registro.id}"  required="true" disabled="true" rendered="#{ventaFrm.estadoCrud ne 'Crear'}"
