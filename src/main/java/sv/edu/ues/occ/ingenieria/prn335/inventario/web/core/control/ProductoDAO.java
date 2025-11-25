@@ -28,20 +28,20 @@ public class ProductoDAO extends InventarioDefaultDataAccess<Producto> implement
     //Metodos especificos
 
     public List<Producto> findProductosActivos() {
-        return em.createQuery(
-                        "SELECT t FROM Producto t WHERE t.activo = true ORDER BY t.nombreProducto",
-                        Producto.class)
-                .getResultList();
-    }
-    public List<Producto> autocompleteProducto(String consulta) {
-        if (consulta == null || consulta.isBlank()) {
-            return Collections.emptyList();
-        }
-
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Producto> cq = cb.createQuery(Producto.class);
         Root<Producto> root = cq.from(Producto.class);
+        cq.select(root).where(cb.isTrue(root.get("activo"))).orderBy(cb.asc(root.get("nombreProducto")));
+        return em.createQuery(cq).getResultList();
+    }
 
+    public List<Producto> findLikeConsulta(String consulta) {
+        if (consulta == null || consulta.isBlank()) {
+            return Collections.emptyList();
+        }
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Producto> cq = cb.createQuery(Producto.class);
+        Root<Producto> root = cq.from(Producto.class);
         // Crear predicado para buscar por nombre y filtrar por activo
         Predicate predicadoNombre = cb.like(
                 cb.lower(root.get("nombreProducto")),

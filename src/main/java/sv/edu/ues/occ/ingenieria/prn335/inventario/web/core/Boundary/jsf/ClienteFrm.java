@@ -46,7 +46,6 @@ public class ClienteFrm extends DefaultFrm<Cliente> implements Serializable {
         try {
             return taDao.buscarPorId(id);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

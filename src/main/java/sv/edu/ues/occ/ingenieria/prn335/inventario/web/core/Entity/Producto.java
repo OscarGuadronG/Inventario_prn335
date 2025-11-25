@@ -1,6 +1,7 @@
     package sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity;
 
     import jakarta.persistence.*;
+    import jakarta.validation.constraints.NotBlank;
     import jakarta.validation.constraints.Size;
 
     import java.util.UUID;
@@ -10,20 +11,6 @@
     public class Producto {
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Producto)) return false;
-            Producto other = (Producto) o;
-            // Igualdad por ID (cuando ya fue asignado)
-            return this.id != null && this.id.equals(other.id);
-        }
-
-        @Override
-        public int hashCode() {
-            return (id == null) ? 0 : id.hashCode();
-        }
-
-        @Override
         public String toString() {
             return "Producto{id=" + id + ", nombreProducto=" + nombreProducto + "}";
         }
@@ -31,7 +18,8 @@
         @Column(name = "id_producto", nullable = false)
         private UUID id;
 
-        @Size(max = 155)
+        @NotBlank(message = "{msg.nombre.blanco}")
+        @Size(min = 5, max = 155, message = "{msg.nombre.longitud}")
         @Column(name = "nombre_producto", length = 155)
         private String nombreProducto;
 
