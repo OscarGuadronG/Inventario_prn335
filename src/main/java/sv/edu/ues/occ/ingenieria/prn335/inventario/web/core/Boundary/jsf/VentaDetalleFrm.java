@@ -1,6 +1,7 @@
 package sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Boundary.jsf;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -56,6 +57,24 @@ public class VentaDetalleFrm extends DefaultFrm<VentaDetalle> implements Seriali
         detalle.setEstado("ACTIVO");
         return detalle;
 
+    }
+    @Override
+    public void btnNuevo() {
+        // Verificar que hay una venta padre válida
+        if (ventaFrm == null || ventaFrm.getRegistro() == null || ventaFrm.getRegistro().getId() == null) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Advertencia", "Primero debe guardar la venta antes de agregar detalles"));
+            return;
+        }
+
+        // Solo cambiar a estado de creación si hay una venta válida
+        this.estadoCrud = ESTADO_CRUD.valueOf("Crear");
+        this.registro = nuevoRegistro();
+
+        // Asignar la venta padre al detalle
+        if (this.registro != null) {
+            this.registro.setIdVenta(ventaFrm.getRegistro());
+        }
     }
 
     @Override

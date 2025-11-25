@@ -9,7 +9,7 @@ import jakarta.inject.Inject;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.ProveedorDAO;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Proveedor;
 
-@FacesConverter(value = "proveedorConverter", managed = true)
+@FacesConverter(value = "proveedorConverter")
 @ApplicationScoped
 public class ProveedorConverter implements Converter<Proveedor> {
 

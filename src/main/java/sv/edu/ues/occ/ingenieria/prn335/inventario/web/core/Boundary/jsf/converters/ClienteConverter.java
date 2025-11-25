@@ -20,22 +20,25 @@ public class ClienteConverter implements Converter<Cliente> {
 
     @Override
     public Cliente getAsObject(FacesContext ctx, UIComponent cmp, String value) {
-        System.out.println("instanciado");
-        if (value == null || value.isBlank()) {
-            System.out.println("VACIO");
+        if (value == null || value.trim().isEmpty()) {
             return null;
         }
         try {
-            return clienteDAO.buscarPorId(UUID.fromString(value));
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-
+            UUID id = UUID.fromString(value);
+            Cliente cliente = clienteDAO.buscarPorId(id);
+            System.out.println("Converter - ID: " + value + ", Cliente: " + (cliente != null ? cliente.getNombre() : "null"));
+            return cliente;
+        } catch (Exception e) {
+            System.err.println("Error en converter: " + e.getMessage());
+            return null;
         }
     }
 
     @Override
     public String getAsString(FacesContext ctx, UIComponent cmp, Cliente cliente) {
-        if (cliente == null || cliente.getId() == null) return "";
+        if (cliente == null || cliente.getId() == null) {
+            return "";
+        }
         return cliente.getId().toString();
     }
 }

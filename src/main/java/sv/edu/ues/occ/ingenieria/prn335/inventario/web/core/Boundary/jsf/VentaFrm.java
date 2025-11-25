@@ -82,6 +82,9 @@ public class VentaFrm extends DefaultFrm<Venta> implements Serializable{
                 notificadorVenta.notificarCambioVenta("Venta Cerrada: " + this.registro.getId());
             }
         }
+        else {
+            System.out.println("No hay registro");
+        }
         super.btnGuardar();
     }
 }
