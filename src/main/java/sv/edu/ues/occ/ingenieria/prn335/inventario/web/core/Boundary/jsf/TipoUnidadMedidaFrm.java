@@ -78,7 +78,7 @@ public class TipoUnidadMedidaFrm extends DefaultFrm<TipoUnidadMedida> implements
 
     //--------------------Limpiar SubFormulario-----------------------------//
     public void resetSubFormulario() {
-        PrimeFaces.current().resetInputs(":panelEdicionC");
+        PrimeFaces.current().resetInputs(":frmFormulario:panelEdicionC");
         estadoSubFormulario = ESTADO_CRUD.Nada;
         detalle = null;
     }
