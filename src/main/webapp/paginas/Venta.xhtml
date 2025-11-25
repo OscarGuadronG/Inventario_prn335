@@ -112,6 +112,14 @@
                   <h:panelGroup id="BtnEdicion" layout="Block" styleClass="panel-botones">
                      <p:commandButton value="Cerrar Venta"
                                       icon="pi pi-bell"
+                                      action="#{ventaFrm.notificarCambioVenta}"
+                                      update=":frmFormulario :frmTabla mensajes"
+                                      styleClass="p-button p-button-warning"
+                                      rendered="#{ventaFrm.estadoCrud ne 'Nada' and ventaFrm.registro.id != null and  ventaFrm.registro.estado!='CERRADA'}">
+
+                     </p:commandButton>
+                     <p:commandButton value="Cerrar Venta"
+                                      icon="pi pi-bell"
                                       action="#{ventaFrm.notificarCambioVenta()}"
                                       update=":frmFormulario :frmTabla mensajes"
                                       styleClass="p-button p-button-warning"

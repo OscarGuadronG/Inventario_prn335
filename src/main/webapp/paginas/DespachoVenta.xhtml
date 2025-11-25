@@ -117,6 +117,7 @@
             ws.onmessage = function(event) {
                 let mensaje = event.data;
                 console.log("Mensaje WebSocket recibido:", mensaje);
+                actualizar();
             };
             ws.onopen = function(e) {
                 console.log("Conexión WebSocket establecida con el servidor de ventas");
