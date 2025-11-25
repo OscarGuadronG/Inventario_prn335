@@ -44,7 +44,7 @@
 
                 <p:column headerText="Fecha">
                     <h:outputText value="#{r.fecha}">
-                        <f:converter converterId="offsetDateTimeConverter1" />
+                        <f:converter converterId="offsetDateTimeConverter" />
                     </h:outputText>
                 </p:column>
 
@@ -67,7 +67,7 @@
                                          value="#{despachoVentaFrm.registro.fecha}"
                                          disabled="true"
                                          styleClass="campo-input"
-                                         converter="offsetDateTimeConverter1"/>
+                                         converter="offsetDateTimeConverter"/>
 
                             <h:outputLabel for="venta" value="ID Venta: " styleClass="etiqueta required" disabled="true" rendered="#{despachoVentaFrm.estadoCrud ne 'Crear'}"/>
                             <p:inputText id="venta" value="#{despachoVentaFrm.registro.id}"  required="true" disabled="true" rendered="#{despachoVentaFrm.estadoCrud ne 'Crear'}"

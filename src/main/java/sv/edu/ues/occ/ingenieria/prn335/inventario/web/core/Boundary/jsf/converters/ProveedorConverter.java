@@ -6,10 +6,13 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.convert.Converter;
 import jakarta.faces.convert.FacesConverter;
 import jakarta.inject.Inject;
+import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Cliente;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.control.ProveedorDAO;
 import sv.edu.ues.occ.ingenieria.prn335.inventario.web.core.Entity.Proveedor;
 
-@FacesConverter(value = "proveedorConverter")
+import java.util.UUID;
+
+@FacesConverter(value = "proveedorConverter", managed = true)
 @ApplicationScoped
 public class ProveedorConverter implements Converter<Proveedor> {
 
@@ -20,7 +23,14 @@ public class ProveedorConverter implements Converter<Proveedor> {
     public Proveedor getAsObject(FacesContext ctx, UIComponent cmp, String value) {
         if (value == null || value.isBlank()) return null;
         try {
-            return proveedorDAO.buscarPorId(Integer.parseInt(value));
+            Proveedor encontrado = proveedorDAO.buscarPorId(Integer.parseInt(value));
+            if (encontrado == null) {
+                System.out.println("No se encontro el Proveedor");
+                return null;
+            }else {
+                System.out.println("Proveerdor encontrado: " + encontrado);
+            }
+            return encontrado;
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }

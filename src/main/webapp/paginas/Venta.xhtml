@@ -44,7 +44,7 @@
 
          <p:column headerText="Fecha">
             <h:outputText value="#{r.fecha}">
-               <f:converter converterId="offsetDateTimeConverter1" />
+               <f:converter converterId="offsetDateTimeConverter" />
             </h:outputText>
          </p:column>
 
@@ -69,7 +69,7 @@
                                   value="#{ventaFrm.registro.fecha}"
                                   disabled="true"
                                   styleClass="campo-input"
-                                  converter="offsetDateTimeConverter1"/>
+                                  converter="offsetDateTimeConverter"/>
 
                      <h:outputLabel for="venta" value="ID venta: " styleClass="etiqueta required" disabled="true" rendered="#{ventaFrm.estadoCrud ne 'Crear'}"/>
                      <p:inputText id="venta" value="#{ventaFrm.registro.id}"  required="true" disabled="true" rendered="#{ventaFrm.estadoCrud ne 'Crear'}"
@@ -80,7 +80,7 @@
 
                      <p:outputLabel for="Clientes" value="Cliente:" />
                      <p:selectOneMenu id="Clientes"
-                                      value="#{ventaFrm.registro.idCliente.id}"
+                                      value="#{ventaFrm.registro.idCliente }"
                                       converter="clienteConverter"
                                       style="width: 100%">
                         <f:selectItem itemLabel="-- Seleccione --"
