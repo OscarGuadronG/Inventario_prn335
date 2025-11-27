@@ -33,7 +33,6 @@ public class SessionHandler {
             if (session.isOpen()) {
                 try {
                     session.getBasicRemote().sendText(mensaje);
-                    System.out.println("Mensaje enviado a cliente");
                 } catch (Exception e) {
                     System.out.println("Error enviando mensaje: " + e.getMessage());
                 }

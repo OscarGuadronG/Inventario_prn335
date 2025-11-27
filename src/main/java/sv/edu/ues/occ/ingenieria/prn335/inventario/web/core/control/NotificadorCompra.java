@@ -25,9 +25,7 @@ public class NotificadorCompra implements Serializable {
 
     public void notificarCambioCompra(String mensaje) {
         try {
-            System.out.println("Enviando por WebSocket: " + mensaje);
             compraEndpoint.enviarMensajeBroadcast(mensaje);
-            System.out.println("Mensaje WebSocket enviado");
         } catch (Exception e) {
             System.out.println("Error WebSocket: " + e.getMessage());
         }

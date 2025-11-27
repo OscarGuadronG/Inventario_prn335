@@ -40,7 +40,6 @@ public class CompraEndpoint implements Serializable {
 
 
     public void notificarCierreCompra(String idCompra) {
-        System.out.println("🔔 Notificando cierre de compra: " + idCompra);
         enviarMensajeBroadcast("COMPRA_CERRADA:" + idCompra);
     }
 }
