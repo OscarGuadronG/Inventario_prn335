@@ -29,5 +29,18 @@ public class NotificadorCompra implements Serializable {
         } catch (Exception e) {
             System.out.println("Error WebSocket: " + e.getMessage());
         }
+        try {
+            Connection connection = connectionFactory.createConnection();
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            MessageProducer producer = session.createProducer(queue);
+            TextMessage textMessage = session.createTextMessage(mensaje);
+            connection.start();
+            producer.send(textMessage);
+            producer.close();
+            session.close();
+            connection.close();
+        } catch (JMSException e) {
+            Logger.getLogger(NotificadorCompra.class.getName()).log(Level.SEVERE, "Error al enviar mensaje JMS", e);
+        }
     }
 }
